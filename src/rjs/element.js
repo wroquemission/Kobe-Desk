@@ -10,6 +10,8 @@ class Element {
         if (parent instanceof Element) {
             this.parent.addChild(this);
         }
+
+        this.element = undefined;
     }
 
     addChild(child) {
@@ -17,9 +19,27 @@ class Element {
         this.children.push(child);
     }
 
-    render() {
-        const { elementClass, ID, text, eventListener, attributes } = this.parameters;
+    hide() {
+        if (this.element) {
+            this.element.classList.add('hide');
+        }
+    }
 
+    show() {
+        if (this.element) {
+            this.element.classList.remove('hide');
+        }
+    }
+
+    setText(text) {
+        if (this.element) {
+            this.element.innerText = text;
+        }
+    }
+
+    render() {
+        const { elementClass, ID, hidden, text, eventListener, attributes } = this.parameters;
+ 
         const element = document.createElement(this.tag);
 
         if (elementClass) {
@@ -34,6 +54,10 @@ class Element {
 
         if (ID) {
             element.setAttribute('id', ID);
+        }
+
+        if (hidden) {
+            element.classList.add('hide');
         }
 
         if (eventListener) {
@@ -68,6 +92,8 @@ class Element {
         if (!(this.parent instanceof Element)) {
             this.parent.appendChild(element);
         }
+
+        this.element = element;
 
         return element;
     }

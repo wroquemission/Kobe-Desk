@@ -79,12 +79,15 @@ div#category-select-options {
     padding: 4px 7px;
     border-radius: 4px;
     box-sizing: border-box;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 300;
 }
 
 span#category-select-arrow {
     font-size: 14pt;
     position: absolute;
-    transform: translate(11px, -4px);
+    transform: translate(50px, -1px);
 }
 
 .category-select-option {

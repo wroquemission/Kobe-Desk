@@ -1,6 +1,9 @@
 const viewCategories = {
+    'Import': [
+        new ImportRosterView()
+    ],
     'Create': [
-        new TransferDocsView()
+        new CreateTransferDocsView()
     ]
 };
 
@@ -13,3 +16,4 @@ for (const category in viewCategories) {
 }
 
 viewNavigator.renderTitlebar();
+viewNavigator.selectCategory('Create');
