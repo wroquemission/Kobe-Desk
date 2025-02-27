@@ -1,5 +1,5 @@
 class CreateTransferDocsView extends View {
-    static get name() { return 'Transfer Docs'; }
+    get name() { return 'Transfer Docs'; }
 
     constructor() {
         super();

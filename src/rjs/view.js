@@ -1,7 +1,7 @@
 const viewContainer = document.querySelector('#view');
 
 class View {
-    static get name() { return undefined; }
+    get name() { return undefined; }
 
     constructor() {
         this.elements = [];

@@ -23,6 +23,7 @@
         "electron-builder": "^22.14.13"
     },
     "dependencies": {
+        "@electron/remote": "github:electron/remote",
         "electron-is-dev": "^1.2.0",
         "electron-window-state": "^5.0.3",
         "fix-path": "^2.1.0"

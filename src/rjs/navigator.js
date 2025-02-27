@@ -1,10 +1,10 @@
 const titlebarElement = document.querySelector('#titlebar');
 
 class ViewNavigator {
-    constructor(defaultCategory, defaultView) {
+    constructor() {
         this.categories = {};
-        this.currentCategory = defaultCategory;
-        this.currentView = defaultView;
+        this.currentCategory = undefined;
+        this.currentView = undefined;
     }
 
     selectCategory(category) {
@@ -19,8 +19,6 @@ class ViewNavigator {
     }
 
     addView(category, view) {
-        view.build();
-
         if (category in this.categories) {
             this.categories[category].push(view);
         } else {
@@ -30,8 +28,21 @@ class ViewNavigator {
 
     renderViewList() {
         const listWrapper = new Element('DIV', null, {
-            
+            ID: 'view-list-wrapper'
         });
+
+        for (const view of this.categories[this.currentCategory]) {
+            let classes = ['view-list-item'];
+
+            if (view.name === this.currentView.name) {
+                classes.push('view-list-item-active');
+            }
+
+            new Element('DIV', listWrapper, {
+                elementClass: classes,
+                text: view.name
+            });
+        }
 
         return listWrapper;
     }

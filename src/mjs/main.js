@@ -1,11 +1,11 @@
 const {
     app,
     BrowserWindow,
-    dialog,
     ipcMain,
     Menu,
-    Accelerator
 } = require('electron');
+
+require('@electron/remote/main').initialize();
 
 const isMac = process.platform === 'darwin';
 
@@ -38,6 +38,7 @@ const mainWinObject = {
     show: false,
     webPreferences: {
         nodeIntegration: true,
+        enableRemoteModule: true,
         contextIsolation: false
     },
     movable: true
@@ -63,6 +64,8 @@ function createWindow() {
         protocol: 'file:',
         slashes: true
     }));
+
+    require("@electron/remote/main").enable(mainWin.webContents);
 
     mainWin.webContents.openDevTools({ mode: 'detach' });
 

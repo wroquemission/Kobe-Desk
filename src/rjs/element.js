@@ -89,7 +89,7 @@ class Element {
         }
 
 
-        if (!(this.parent instanceof Element)) {
+        if (!(this.parent instanceof Element) && this.parent) {
             this.parent.appendChild(element);
         }
 

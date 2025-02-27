@@ -7,7 +7,7 @@ const viewCategories = {
     ]
 };
 
-const viewNavigator = new ViewNavigator('Create', viewCategories['Create'][0]);
+const viewNavigator = new ViewNavigator();
 
 for (const category in viewCategories) {
     for (const view of viewCategories[category]) {
@@ -15,5 +15,5 @@ for (const category in viewCategories) {
     }
 }
 
+viewNavigator.selectCategory('Import');
 viewNavigator.renderTitlebar();
-viewNavigator.selectCategory('Create');
