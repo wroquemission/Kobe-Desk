@@ -3,7 +3,8 @@ const viewContainer = document.querySelector('#view');
 class View {
     get name() { return undefined; }
 
-    constructor() {
+    constructor(database) {
+        this.database = database;
         this.elements = [];
         this.build();
     }

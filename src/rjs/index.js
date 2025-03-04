@@ -1,9 +1,11 @@
+const database = new Database();
+
 const viewCategories = {
     'Import': [
-        new ImportRosterView()
+        new ImportRosterView(database)
     ],
     'Create': [
-        new CreateTransferDocsView()
+        new CreateTransferDocsView(database)
     ]
 };
 

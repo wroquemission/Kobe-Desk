@@ -48,6 +48,10 @@ class ViewNavigator {
     }
 
     renderTitlebar() {
+        while (titlebarElement.firstChild) {
+            titlebarElement.firstChild.remove();
+        }
+
         const contentWrapper = new Element('DIV', titlebarElement, {
             ID: 'titlebar-content'
         });
@@ -89,7 +93,7 @@ class ViewNavigator {
                 eventListener: ['click', () => {
                     selectOptions.hide();
                     this.selectCategory(category);
-                    selectValue.setText(category);
+                    this.renderTitlebar();
                 }]
             });
         }
