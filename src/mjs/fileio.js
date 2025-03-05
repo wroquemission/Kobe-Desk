@@ -25,8 +25,12 @@ class FileIO {
         }
     }
 
-    writeData(data, path) {
-        fs.writeFile(path, JSON.stringify(data), err => {
+    normalize(filePath) {
+        return path.join(this.path, filePath);
+    }
+
+    writeData(data, filePath) {
+        fs.writeFile(filePath, JSON.stringify(data), err => {
             if (err) return 1;
         });
         return 0;

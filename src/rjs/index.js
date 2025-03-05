@@ -1,4 +1,5 @@
 const database = new Database();
+database.loadData();
 
 const viewCategories = {
     'Import': [

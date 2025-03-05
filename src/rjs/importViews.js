@@ -23,10 +23,6 @@ class ImportRosterView extends View {
                     const data = XLSX.utils.sheet_to_json(firstSheet);
 
                     this.database.importTable(data);
-
-                    console.log(data);
-
-                    console.log(this.database)
                 }
             }]
         });

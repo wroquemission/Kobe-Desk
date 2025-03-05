@@ -90,20 +90,13 @@ app.on('activate', () => {
     }
 });
 
-ipcMain.on('request-index', (event, lang) => {
-    event.returnValue = fileio.readData(path.join(
-        fileio.path,
-        lang,
-        'index.json'
-    ));
+ipcMain.on('save-data', (event, data) => {
+    fileio.writeData(data, fileio.normalize('data.json'));
+    event.returnValue = '';
 });
 
-ipcMain.on('request-book', (event, book, lang) => {
-    event.returnValue = fileio.readData(path.join(
-        fileio.path,
-        lang,
-        book + '.ichs'
-    ));
+ipcMain.on('load-data', (event) => {
+    event.returnValue = fileio.readData(fileio.normalize('data.json'));
 });
 
 const template = [
