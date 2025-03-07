@@ -78,6 +78,24 @@ class Database {
         this.saveData();
     }
 
+    importAddresses(table) {
+        for (const row of table) {
+            const fields = ['Name', 'Postal Code', 'English Address', 'Japanese Address'];
+
+            if (fields.every(x => x in row && row[x])) {
+                this.addAddress(new Address(
+                    row['Name'],
+                    row['Postal Code'],
+                    row['English Address'],
+                    row['Japanese Address'],
+                    []
+                ));
+            }
+        }
+
+        this.saveData();
+    }
+
     saveData() {
         ipcRenderer.sendSync('save-data', JSON.stringify([
             this.areas,
@@ -129,9 +147,10 @@ class Database {
             this.addAddress(
                 new Address(
                     address.name,
-                    address.areas,
+                    address.postalCode,
                     address.englishAddress,
-                    address.japaneseAddress
+                    address.japaneseAddress,
+                    address.areas
                 )
             );
         }
@@ -178,10 +197,11 @@ class PhoneNumber {
 }
 
 class Address {
-    constructor(name, areas, englishAddress, japaneseAddress) {
+    constructor(name,postalCode, englishAddress, japaneseAddress, areas) {
         this.name = name;
-        this.areas = areas;
+        this.postalCode = postalCode;
         this.englishAddress = englishAddress;
         this.japaneseAddress = japaneseAddress;
+        this.areas = areas;
     }
 }

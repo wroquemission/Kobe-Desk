@@ -3,7 +3,8 @@ database.loadData();
 
 const viewCategories = {
     'Import': [
-        new ImportRosterView(database)
+        new ImportRosterView(database),
+        new ImportAddressesView(database),
     ],
     'Create': [
         new CreateTransferDocsView(database)

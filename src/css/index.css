@@ -27,6 +27,7 @@ body, html {
     top: 0;
     width: 100%;
     height: 31px;
+    user-select: none;
     -webkit-user-select: none;
     -webkit-app-region: drag;
     color: #675d5d;
@@ -112,6 +113,7 @@ div#view-list-wrapper {
     color: #d0d0d0;
     font-weight: 300;
     text-transform: uppercase;
+    display: flex;
 }
 
 .view-list-item {
@@ -134,7 +136,8 @@ div#view {
     box-sizing: border-box;
     padding: 50px 25px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 button.view-button {
@@ -148,4 +151,12 @@ button.view-button {
     cursor: pointer;
     padding: 0 25px;
     outline: none;
+}
+
+h1.view-header {
+    font-size: 17pt;
+    font-family: 'Roboto';
+    color: #5d5d5d;
+    font-weight: 100;
+    margin-bottom: 1.1em;
 }

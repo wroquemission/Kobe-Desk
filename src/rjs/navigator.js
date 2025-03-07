@@ -38,9 +38,19 @@ class ViewNavigator {
                 classes.push('view-list-item-active');
             }
 
-            new Element('DIV', listWrapper, {
+            const viewListItem = new Element('DIV', listWrapper, {
                 elementClass: classes,
-                text: view.name
+                text: view.name,
+                eventListener: ['click', () => {
+                    this.currentView = view;
+
+                    const currentItem = document.querySelector('.view-list-item-active');
+                    currentItem.classList.remove('view-list-item-active');
+
+                    viewListItem.addClass('view-list-item-active');
+
+                    this.currentView.render();
+                }]
             });
         }
 

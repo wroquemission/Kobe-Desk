@@ -5,6 +5,14 @@ class Element {
         
         this.parameters = parameters;
 
+        if ('elementClass' in this.parameters) {
+            if (!Array.isArray(this.parameters.elementClass)) {
+                this.parameters.elementClass = [this.parameters.elementClass];
+            }
+        } else {
+            this.parameters.elementClass = [];
+        }
+
         this.children = [];
 
         if (parent instanceof Element) {
@@ -31,6 +39,26 @@ class Element {
         }
     }
 
+    addClass(elementClass) {
+        this.parameters.elementClass.push(elementClass);
+        
+        if (this.element) {
+            this.element.classList.add(elementClass);
+        }
+    }
+
+    removeClass(elementClass) {
+        const index = this.parameters.elementClass.indexOf(elementClass);
+
+        if (index > -1) {
+            this.parameters.elementClass.splice(index, 1);
+        }
+        
+        if (this.element) {
+            this.element.classList.remove(elementClass);
+        }
+    }
+
     setText(text) {
         if (this.element) {
             this.element.innerText = text;
@@ -42,15 +70,9 @@ class Element {
  
         const element = document.createElement(this.tag);
 
-        if (elementClass) {
-            if (Array.isArray(elementClass)) {
-                elementClass.forEach(x => {
-                    element.classList.add(x);
-                });
-            } else {
-                element.classList.add(elementClass);
-            }
-        }
+        elementClass.forEach(x => {
+            element.classList.add(x);
+        });
 
         if (ID) {
             element.setAttribute('id', ID);
