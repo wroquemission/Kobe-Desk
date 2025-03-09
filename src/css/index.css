@@ -33,7 +33,6 @@ body, html {
     color: #675d5d;
     display: flex;
     align-items: center;
-    justify-content: center;
     font-family: 'Roboto';
     font-size: 10pt;
     font-weight: 600;
@@ -48,7 +47,6 @@ body, html {
 
 
 #titlebar-content {
-    width: 100%;
     box-sizing: border-box;
     -webkit-app-region: none;
     display: flex;
@@ -159,4 +157,20 @@ h1.view-header {
     color: #5d5d5d;
     font-weight: 100;
     margin-bottom: 1.1em;
+}
+
+.view-comment {
+    font-family: 'Roboto';
+    font-size: 11pt;
+    margin-bottom: 30px;
+    width: 600px;
+    color: #000;
+    line-height: 25px;
+}
+
+span.text-highlight {
+    background: #555555;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 4px;
 }

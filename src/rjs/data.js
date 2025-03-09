@@ -96,6 +96,23 @@ class Database {
         this.saveData();
     }
 
+    importAddressKey(table) {
+        for (const row of table) {
+            const fields = ['Areas', 'Apartment'];
+
+            if (fields.every(x => x in row && row[x])) {
+                const area = row['Areas'];
+                const apartmentName = row['Apartment'];
+
+                if (area in this.areas && apartmentName in this.addresses) {
+                    this.addresses[apartmentName].areas.push(area);
+                }
+            }
+        }
+
+        this.saveData();
+    }
+
     saveData() {
         ipcRenderer.sendSync('save-data', JSON.stringify([
             this.areas,

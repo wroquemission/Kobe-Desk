@@ -95,7 +95,7 @@ class Element {
         }
 
         if (text) {
-            element.innerHTML = text;
+            element.innerHTML = text.replaceAll(/=(.*?)=/g, '<span class="text-highlight">$1</span>');
         }
 
         if (attributes) {
