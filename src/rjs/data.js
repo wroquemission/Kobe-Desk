@@ -123,54 +123,80 @@ class Database {
     }
 
     loadData() {
-        const [areas, people, numbers, addresses] = JSON.parse(ipcRenderer.sendSync('load-data'));
+        const data = ipcRenderer.sendSync('load-data');
 
-        for (const area of Object.values(areas)) {
-            this.addArea(
-                new Area(
-                    area.name,
-                    area.district,
-                    area.zone,
-                    area.people
-                )
-            );
+        if (Array.isArray(data) && data.length === 4) {
+            const [areas, people, numbers, addresses] = data;
+
+            for (const area of Object.values(areas)) {
+                this.addArea(
+                    new Area(
+                        area.name,
+                        area.district,
+                        area.zone,
+                        area.people
+                    )
+                );
+            }
+
+            for (const person of Object.values(people)) {
+                this.addPerson(
+                    new Person(
+                        person.name,
+                        person.ID,
+                        person.type,
+                        person.assignment,
+                        person.status,
+                        person.arrivalDate,
+                        person.releaseDate
+                    )
+                );
+            }
+
+            for (const number of Object.values(numbers)) {
+                this.addNumber(
+                    new PhoneNumber(
+                        number.number,
+                        number.area,
+                        number.lineAssignment
+                    )
+                );
+            }
+
+            for (const address of Object.values(addresses)) {
+                this.addAddress(
+                    new Address(
+                        address.name,
+                        address.postalCode,
+                        address.englishAddress,
+                        address.japaneseAddress,
+                        address.areas
+                    )
+                );
+            }
+        }
+    }
+
+    getZoneAreas() {
+        let zones = {};
+
+        for (const areaName in this.areas) {
+            const area = this.areas[areaName];
+
+            if (area.zone in zones) {
+                zones[area.zone].push(area.name);
+            } else {
+                zones[area.zone] = [area.name];
+            }
         }
 
-        for (const person of Object.values(people)) {
-            this.addPerson(
-                new Person(
-                    person.name,
-                    person.ID,
-                    person.type,
-                    person.assignment,
-                    person.status,
-                    person.arrivalDate,
-                    person.releaseDate
-                )
-            );
-        }
+        return zones;
+    }
 
-        for (const number of Object.values(numbers)) {
-            this.addNumber(
-                new PhoneNumber(
-                    number.number,
-                    number.area,
-                    number.lineAssignment
-                )
-            );
-        }
-
-        for (const address of Object.values(addresses)) {
-            this.addAddress(
-                new Address(
-                    address.name,
-                    address.postalCode,
-                    address.englishAddress,
-                    address.japaneseAddress,
-                    address.areas
-                )
-            );
-        }
+    getAreaNumber(area) {
+        return Object.values(this.numbers).find(number => {
+            return number.area === area
+        });
     }
 }
 
@@ -214,7 +240,7 @@ class PhoneNumber {
 }
 
 class Address {
-    constructor(name,postalCode, englishAddress, japaneseAddress, areas) {
+    constructor(name, postalCode, englishAddress, japaneseAddress, areas) {
         this.name = name;
         this.postalCode = postalCode;
         this.englishAddress = englishAddress;

@@ -96,7 +96,9 @@ ipcMain.on('save-data', (event, data) => {
 });
 
 ipcMain.on('load-data', (event) => {
-    event.returnValue = fileio.readData(fileio.normalize('data.json'));
+    const data = fileio.readData(fileio.normalize('data.json'));
+
+    event.returnValue = data;
 });
 
 const template = [
