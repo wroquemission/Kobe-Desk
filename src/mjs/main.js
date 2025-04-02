@@ -23,6 +23,7 @@ require('./settings.js');
 const url = require('url');
 
 const fixPath = require('fix-path');
+const { create } = require('domain');
 fixPath();
 
 const mainWinObject = {
@@ -96,6 +97,36 @@ ipcMain.on('load-data', (event) => {
 
 ipcMain.on('create-window', (event, windowName, windowObject) => {
     createWindow(windowName, windowObject);
+
+    event.returnValue = '';
+});
+
+const warningWinObject = {
+    show: true,
+    webPreferences: {
+        nodeIntegration: true,
+        enableRemoteModule: true,
+        contextIsolation: false
+    },
+    movable: true,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+        color: '#fff',
+        symbolColor: '#000',
+    },
+    width: 600,
+    height: 450,
+    backgroundColor: '#fff',
+};
+
+let warningWin;
+
+ipcMain.on('append-warning', (event, warning) => {
+    if (!warningWin) {
+        warningWin = createWindow('warning', warningWinObject);
+    }
+
+    warningWin.webContents.send('append-warning', warning);
 
     event.returnValue = '';
 });

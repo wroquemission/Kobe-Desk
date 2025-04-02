@@ -202,7 +202,13 @@ class Database {
 
     getAreaNumber(area) {
         return Object.values(this.numbers).find(number => {
-            return number.area === area
+            return number.area === area;
+        });
+    }
+
+    getAreaAddress(area) {
+        return Object.values(this.addresses).find(address => {
+            return address.areas.indexOf(area) > -1;
         });
     }
 }
