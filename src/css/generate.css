@@ -1,0 +1,289 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('../assets/fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto Condensed';
+    src: url('../assets/fonts/Roboto_Condensed-Regular.ttf');
+}
+
+body,
+html {
+    padding: 1em;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.zone-header {
+    font-family: 'Roboto';
+    font-size: 14pt;
+    color: #555;
+}
+
+.district-header {
+    font-family: 'Roboto';
+    font-size: 14pt;
+    color: #555;
+    text-align: center;
+    font-weight: 500;
+    background: #413939;
+    color: white;
+    padding: 0.3em;
+    margin-bottom: 0.2em;
+}
+
+.district-row {
+    display: flex;
+}
+
+.area-table {
+    width: 48%;
+    margin: 0;
+    flex: 50%;
+    font-family: Roboto;
+    font-size: 10pt;
+    page-break-inside: avoid;
+    text-align: center;
+}
+
+.table-filler {
+    width: 48%;
+    margin: 0;
+    flex: 50%;
+    font-family: Roboto;
+    font-size: 10pt;
+    page-break-inside: avoid;
+}
+
+.area-header-row {
+    font-family: 'Roboto';
+    font-weight: 300 !important;
+    text-align: center;
+    font-size: 12pt;
+}
+
+.area-header {
+    font-family: 'Roboto';
+    font-weight: 400;
+    text-align: center;
+    height: 2em;
+    background: #e36e6e;
+    color: white;
+}
+
+tr.area-row {
+    text-align: center;
+}
+
+td.role-column {
+    font-weight: 600;
+    color: #b98989;
+}
+
+td.english-address-column {
+    color: #797979;
+}
+
+td.japanese-address-column {
+    color: #5f5d5d;
+}
+
+td.role-column {
+    font-weight: 600;
+    color: #b98989;
+}
+
+td.name-column {
+    color: #372626;
+}
+
+td.area-number-column {
+    font-weight: 600;
+    color: #474747;
+}
+
+img.profile-image {
+    height: 7em;
+}
+
+.cover, .cover-wrapper {
+    height: 100%;
+    width: 100%;
+    /* display: none; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media print {
+    .cover {
+        display: flex;
+    }
+}
+
+#toc-title {
+    width: 100%;
+    font-family: Roboto;
+    color: #e36e6e;
+    font-weight: 500;
+}
+
+div#toc {
+    width: 100%;
+    font-family: Roboto;
+    color: #121e37;
+    font-weight: 500;
+    page-break-after: always;
+}
+
+li.toc-list-item {
+    margin-bottom: .5em;
+    border-bottom: solid 2px #99a9b7;
+    padding-bottom: .6em;
+}
+
+li.toc-list-item::marker {
+    font-weight: 400;
+}
+
+li.toc-list-item a {
+    text-decoration: none;
+    color: #638cb7;
+}
+
+div#phone-list {
+    column-count: 2;
+}
+
+.phone-table-header-row {
+    font-family: 'Roboto';
+    font-size: 14pt;
+    color: #555;
+    text-align: center;
+    font-weight: 500;
+    background: #413939;
+    color: white;
+    padding: 0.3em;
+    margin-bottom: 0.2em;
+}
+
+table.phone-table {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    font-size: 9pt;
+    font-family: 'Roboto';
+}
+
+td.phone-table-row-name {
+    font-weight: 600;
+    color: #474747;
+}
+
+td.phone-table-row-number {
+    color: #372626;
+}
+
+.phone-list-row-title th {
+    font-weight: 300;
+}
+
+div#address-list {
+    column-count: 2;
+    page-break-after: always;
+}
+
+tr.address-table-header-row {
+    font-family: 'Roboto';
+    font-size: 10pt;
+    color: #555;
+    text-align: center;
+    font-weight: 500;
+    color: #474747;
+    padding: 0.3em;
+    margin-bottom: 0.2em;
+    font-weight: 200 !important;
+}
+
+.address-table-header {
+    font-weight: 400;
+    color: #e36e6e;
+}
+
+tr.address-table-row {
+    font-size: 8pt;
+    font-family: 'Roboto';
+    color: #372626;
+}
+
+td.address-table-row-postal {
+    font-weight: 600;
+    color: #474747;
+    width: 5em;
+}
+
+h2.address-zone-header {
+    font-family: 'Roboto';
+    font-size: 12pt;
+    color: #555;
+    text-align: center;
+    font-weight: 500;
+    background: #413939;
+    color: white;
+    padding: 0.3em;
+    margin-bottom: 0.2em;
+}
+
+.section-title {
+    width: 100%;
+    font-family: Roboto;
+    color: #e36e6e;
+    font-weight: 500;
+}
+
+h2.assignment-title {
+    font-family: 'Roboto';
+    font-size: 14pt;
+    color: #555;
+    font-weight: 500;
+    color: #474747;
+    padding: 0.3em;
+    margin-bottom: 0.2em;
+}
+
+ul.assignments-list-missionaries {
+    font-size: 10pt;
+    font-family: 'Roboto';
+    color: #372626;
+}
+
+span.leader-assignment {
+    color: #e36e6e;
+    font-weight: bold;
+}
+
+span.manager-assignment {
+    color: #e36e6e;
+}
+
+.transfer-board {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transfer-board img {
+    width: 100%;
+}
+
+.phone-list-Elder td {
+    color: #6694a0 !important;
+}
+
+.phone-list-Sister td {
+    color: #ff6c86;
+}

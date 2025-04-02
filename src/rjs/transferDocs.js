@@ -5,13 +5,27 @@ const contentElement = new Element('DIV', document.body, {
     ID: 'content'
 });
 
+const covers = database.getCovers();
+
+const titleCoverWrapper = new Element('DIV', contentElement, {
+    elementClass: 'cover-wrapper'
+});
+
+new Element('IMG', titleCoverWrapper, {
+    elementClass: 'cover',
+    attributes: {
+        src: covers['Cover']
+    }
+});
+
 new Element('H1', contentElement, {
     elementClass: 'section-title',
     text: 'Phone List'
 });
 
 const phoneListSection = new Element('DIV', contentElement, {
-    elementClass: 'section'
+    elementClass: 'section',
+    ID: 'phone-list'
 });
 
 function sortObject(unordered) {
@@ -37,7 +51,7 @@ for (const number of Object.values(database.numbers)) {
 phoneIndex = sortObject(phoneIndex);
 
 for (const group in phoneIndex) {
-    const table = new Element('TABLE', contentElement, {
+    const table = new Element('TABLE', phoneListSection, {
         elementClass: 'phone-table'
     });
 
@@ -76,7 +90,8 @@ new Element('H1', contentElement, {
 });
 
 const addressListSection = new Element('DIV', contentElement, {
-    elementClass: 'section'
+    elementClass: 'section',
+    ID: 'address-list'
 });
 
 const zoneAreas = sortObject(database.getZoneAreas());
@@ -142,7 +157,6 @@ for (const zone in zoneAreas) {
     }
 }
 
-const covers = database.getCovers();
 const profiles = database.getProfiles();
 
 const zoneDistricts = database.getZoneDistricts();
@@ -241,7 +255,10 @@ for (const zone in zoneDistricts) {
 
                 new Element('TD', row, {
                     elementClass: 'area-number-column',
-                    text: number.number
+                    text: number.number,
+                    attributes: {
+                        colspan: area.people.length
+                    }
                 });
             }
 
@@ -253,8 +270,11 @@ for (const zone in zoneDistricts) {
                 });
 
                 new Element('TD', japaneseAddressRow, {
-                    elementClass: 'area-address-column',
-                    text: address.japaneseAddress
+                    elementClass: 'japanese-address-column',
+                    text: address.japaneseAddress,
+                    attributes: {
+                        colspan: area.people.length
+                    }
                 });
 
                 const englishAddressRow = new Element('TR', table, {
@@ -262,8 +282,11 @@ for (const zone in zoneDistricts) {
                 });
 
                 new Element('TD', englishAddressRow, {
-                    elementClass: 'area-address-column',
-                    text: address.englishAddress
+                    elementClass: 'english-address-column',
+                    text: address.englishAddress,
+                    attributes: {
+                        colspan: area.people.length
+                    }
                 });
             }
 
