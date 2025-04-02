@@ -27,7 +27,14 @@ class CreateTransferDocsView extends View {
                         enableRemoteModule: true,
                         contextIsolation: false
                     },
-                    movable: true
+                    titleBarStyle: 'hidden',
+                    titleBarOverlay: {
+                        color: '#292929',
+                        symbolColor: '#fff',
+                    },
+                    minWidth: 600,
+                    minHeight: 450,
+                    backgroundColor: '#fff',
                 });
             }]
         });

@@ -3,6 +3,7 @@ const {
     BrowserWindow,
     ipcMain,
     Menu,
+    dialog
 } = require('electron');
 
 require('@electron/remote/main').initialize();
@@ -140,6 +141,32 @@ ipcMain.on('save-image', (event, directory, fileName, sourcePath, isBase64) => {
         data,
         isBase64
     );
+
+    event.returnValue = '';
+});
+
+ipcMain.on('save-pdf', event => {
+    const savePath = dialog.showSaveDialogSync({
+        filters: [
+            { name: 'PDF', extensions: ['pdf'] }
+        ]
+    })
+
+    event.sender.getOwnerBrowserWindow().webContents.printToPDF({
+        displayHeaderFooter: false,
+        printBackground: true,
+        pageSize: 'A4',
+        margins: {
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0
+        },
+        preferCSSPageSize: true,
+        generateDocumentOutline: true
+    }).then(data => {
+        fs.writeFileSync(savePath, data);
+    }).catch(() => {});
 
     event.returnValue = '';
 });

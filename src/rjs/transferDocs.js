@@ -301,4 +301,12 @@ for (const zone in zoneDistricts) {
     }
 }
 
+new Element('BUTTON', contentElement, {
+    elementClass: 'save-button',
+    text: 'SAVE',
+    eventListener: ['click', () => {
+        ipcRenderer.sendSync('save-pdf');
+    }]
+});
+
 contentElement.render();

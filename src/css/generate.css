@@ -17,6 +17,26 @@ html {
     box-sizing: border-box;
 }
 
+#titlebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 31px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    color: #675d5d;
+    display: flex;
+    align-items: center;
+    font-family: 'Roboto';
+    font-size: 10pt;
+    font-weight: 600;
+    background: #292929;
+    border-bottom: solid 3px #9b9b9b;
+    z-index: 99;
+}
+
 .zone-header {
     font-family: 'Roboto';
     font-size: 14pt;
@@ -112,15 +132,16 @@ img.profile-image {
 .cover, .cover-wrapper {
     height: 100%;
     width: 100%;
-    /* display: none; */
     display: flex;
     justify-content: center;
     align-items: center;
+    page-break-after: always;
+    page-break-before: always;
 }
 
 @media print {
-    .cover {
-        display: flex;
+    #titlebar, button {
+        display: none;
     }
 }
 
@@ -193,7 +214,6 @@ td.phone-table-row-number {
 
 div#address-list {
     column-count: 2;
-    page-break-after: always;
 }
 
 tr.address-table-header-row {
@@ -242,6 +262,7 @@ h2.address-zone-header {
     font-family: Roboto;
     color: #e36e6e;
     font-weight: 500;
+    page-break-before: always;
 }
 
 h2.assignment-title {
@@ -286,4 +307,22 @@ span.manager-assignment {
 
 .phone-list-Sister td {
     color: #ff6c86;
+}
+
+button.save-button {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 40px;
+    width: 150px;
+    text-transform: uppercase;
+    font-family: 'Roboto';
+    font-size: 10pt;
+    color: #fff;
+    background: #292929;
+    border: solid 2px #535353;
+    cursor: pointer;
+    padding: 0 25px;
+    outline: none;
 }
