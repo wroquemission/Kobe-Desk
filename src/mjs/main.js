@@ -44,9 +44,29 @@ const mainWinObject = {
     movable: true
 };
 
+function createWindow(windowName, windowObject) {
+    let window = new BrowserWindow(windowObject);
+
+    window.loadURL(url.format({
+        pathname: path.join(__dirname, `../html/${windowName}.html`),
+        protocol: 'file:',
+        slashes: true
+    }));
+
+    require("@electron/remote/main").enable(window.webContents);
+
+    window.webContents.openDevTools({ mode: 'detach' });
+
+    window.webContents.once('did-finish-load', () => {
+        window.show();
+    });
+
+    return window;
+};
+
 let mainWin;
 
-function createWindow() {
+app.on('ready', () => {
     let mainWindowState = windowStateKeeper({
         defaultWidth: 800,
         defaultHeight: 600
@@ -58,36 +78,9 @@ function createWindow() {
     mainWinObject.x = mainWindowState.x;
     mainWinObject.y = mainWindowState.y;
 
-    mainWin = new BrowserWindow(mainWinObject);
-    mainWin.loadURL(url.format({
-        pathname: path.join(__dirname, '../html/index.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
-
-    require("@electron/remote/main").enable(mainWin.webContents);
-
-    mainWin.webContents.openDevTools({ mode: 'detach' });
-
-    mainWin.webContents.once('did-finish-load', () => {
-        mainWin.show();
-    });
-    mainWin.on('closed', e => mainWin = null);
+    mainWin = createWindow('index', mainWinObject);
 
     mainWindowState.manage(mainWin);
-};
-
-let windowPromise = new Promise((resolve, _) => {
-    app.on('ready', () => {
-        createWindow();
-        resolve();
-    });
-});
-
-app.on('activate', () => {
-    if (!mainWin) {
-        mainWin = createWindow();
-    }
 });
 
 ipcMain.on('save-data', (event, data) => {
@@ -99,6 +92,12 @@ ipcMain.on('load-data', (event) => {
     const data = fileio.readData(fileio.normalize('data.json'));
 
     event.returnValue = data;
+});
+
+ipcMain.on('create-window', (event, windowName, windowObject) => {
+    createWindow(windowName, windowObject);
+
+    event.returnValue = '';
 });
 
 const template = [

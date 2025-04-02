@@ -20,13 +20,19 @@ class Database {
         this.numbers[number.number] = number;
     }
 
-    updateNumber(number, area) {
+    updateNumber(number, area, group) {
         number = PhoneNumber.normalize(number);
 
         if (number in this.numbers) {
-            this.numbers[number].area = area;
+            this.numbers[number].name = area;
+            this.numbers[number].group = group;
         } else {
-            this.numbers[number] = new PhoneNumber(number, area, null);
+            this.numbers[number] = new PhoneNumber(
+                number,
+                area,
+                group,
+                null
+            );
         }
     }
 
@@ -41,7 +47,7 @@ class Database {
         for (const row of table) {
             if (row['Phone']) {
                 for (const phone of row['Phone'].split(', ')) {
-                    this.updateNumber(phone, row['Area']);
+                    this.updateNumber(phone, row['Area'], row['Zone']);
                 }
             }
 
@@ -114,12 +120,12 @@ class Database {
     }
 
     saveData() {
-        ipcRenderer.sendSync('save-data', JSON.stringify([
+        ipcRenderer.sendSync('save-data', [
             this.areas,
             this.people,
             this.numbers,
             this.addresses
-        ]));
+        ]);
     }
 
     loadData() {
@@ -157,7 +163,8 @@ class Database {
                 this.addNumber(
                     new PhoneNumber(
                         number.number,
-                        number.area,
+                        number.name,
+                        number.group,
                         number.lineAssignment
                     )
                 );
@@ -226,9 +233,10 @@ class Person {
 }
 
 class PhoneNumber {
-    constructor(number, area, lineAssignment) {
+    constructor(number, name, group, lineAssignment) {
         this.number = PhoneNumber.normalize(number);
-        this.area = area;
+        this.name = name;
+        this.group = group;
         this.lineAssignment = lineAssignment;
     }
 

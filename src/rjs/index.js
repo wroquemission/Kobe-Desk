@@ -20,5 +20,5 @@ for (const category in viewCategories) {
     }
 }
 
-viewNavigator.selectCategory('Import');
+viewNavigator.selectCategory('Create');
 viewNavigator.renderTitlebar();

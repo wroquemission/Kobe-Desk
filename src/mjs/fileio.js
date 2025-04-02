@@ -38,11 +38,13 @@ class FileIO {
 
     readData(path) {
         let data;
+
         try {
             data = JSON.parse(fs.readFileSync(path));
         } catch (_) {
             data = {};
         }
+
         return data;
     }
 }
