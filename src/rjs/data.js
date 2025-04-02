@@ -119,6 +119,20 @@ class Database {
         this.saveData();
     }
 
+    importProfiles(data) {
+        for (const ID in data) {
+            const { extension, filePath } = data[ID];
+
+            ipcRenderer.sendSync(
+                'save-image',
+                'Profiles',
+                `${ID}.jpg`,
+                filePath,
+                extension === 'txt'
+            );
+        }
+    }
+
     saveData() {
         ipcRenderer.sendSync('save-data', [
             this.areas,
@@ -210,6 +224,12 @@ class Database {
         return Object.values(this.addresses).find(address => {
             return address.areas.indexOf(area) > -1;
         });
+    }
+
+    getProfiles() {
+        const data = ipcRenderer.sendSync('get-images', 'Profiles');
+
+        console.log(data)
     }
 }
 

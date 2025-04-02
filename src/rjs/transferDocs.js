@@ -142,4 +142,6 @@ for (const zone in zoneAreas) {
     }
 }
 
+database.getProfiles();
+
 contentElement.render();

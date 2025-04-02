@@ -16,7 +16,11 @@ class FileIO {
     }
 
     listDir(dirPath) {
-        return fs.readdirSync(dirPath);
+        try {
+            return fs.readdirSync(dirPath);
+        } catch (_) {
+            return [];
+        }
     }
 
     setup() {
@@ -29,11 +33,17 @@ class FileIO {
         return path.join(this.path, filePath);
     }
 
+    write(filePath, data, isBase64) {
+        if (isBase64) {
+            data = data.toString().replace(/^data:image\/jpeg;base64,/, '');
+            fs.writeFile(filePath, data, 'base64', () => { });
+        } else {
+            fs.writeFile(filePath, data, () => { });
+        }
+    }
+
     writeData(data, filePath) {
-        fs.writeFile(filePath, JSON.stringify(data), err => {
-            if (err) return 1;
-        });
-        return 0;
+        fs.writeFile(filePath, JSON.stringify(data), () => {});
     }
 
     readData(path) {

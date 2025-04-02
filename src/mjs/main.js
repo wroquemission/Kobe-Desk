@@ -18,6 +18,8 @@ const FileIO = require('./fileio');
 const fileio = new FileIO();
 fileio.setup();
 
+const fs = require('fs');
+
 require('./settings.js');
 
 const url = require('url');
@@ -101,6 +103,41 @@ ipcMain.on('create-window', (event, windowName, windowObject) => {
     event.returnValue = '';
 });
 
+ipcMain.on('get-images', (event, directory) => {
+    const files = fileio.listDir(
+        path.join(fileio.normalize('Images'), directory)
+    );
+
+    event.returnValue = files.map(fileName => {
+        const extension = path.extname(fileName).slice(1);
+        const basename = path.basename(fileName, '.' + extension);
+
+        const raw = fs.readFileSync(
+            path.join(fileio.normalize('Images'), directory, fileName)
+        );
+
+        return { basename, extension, raw };
+    });
+});
+
+ipcMain.on('save-image', (event, directory, fileName, sourcePath, isBase64) => {
+    const filePath = path.join(fileio.normalize('Images'), directory, fileName);
+
+    fs.mkdirSync(path.dirname(filePath), {
+        recursive: true
+    });
+
+    const data = fs.readFileSync(sourcePath);
+
+    const files = fileio.write(
+        filePath,
+        data,
+        isBase64
+    );
+
+    event.returnValue = '';
+});
+
 const warningWinObject = {
     show: true,
     webPreferences: {
@@ -124,9 +161,19 @@ let warningWin;
 ipcMain.on('append-warning', (event, warning) => {
     if (!warningWin) {
         warningWin = createWindow('warning', warningWinObject);
-    }
 
-    warningWin.webContents.send('append-warning', warning);
+        warningWin.webContents.once('dom-ready', () => {
+            warningWin.webContents.send('append-warning', warning);
+        });
+
+        warningWin.on('closed', () => {
+            warningWin = undefined;
+        });
+    } else {
+        warningWin.webContents.once('dom-ready', () => {
+            warningWin.webContents.send('append-warning', warning);
+        });
+    }
 
     event.returnValue = '';
 });

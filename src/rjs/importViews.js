@@ -1,6 +1,7 @@
 const { dialog } = require('@electron/remote');
 const XLSX = require('xlsx');
 const fs = require('fs');
+const path = require('path');
 
 class ImportRosterView extends View {
     get name() { return 'Roster'; }
@@ -123,6 +124,61 @@ class ImportAddressKeyView extends View {
                     const data = XLSX.utils.sheet_to_json(firstSheet);
 
                     this.database.importAddressKey(data);
+                }
+            }]
+        });
+
+        this.addElement(button);
+    }
+}
+
+class ImportProfilesView extends View {
+    get name() { return 'Profiles'; }
+
+    build() {
+        const header = new Element('H1', null, {
+            elementClass: 'view-header',
+            text: 'Import Profiles'
+        });
+
+        this.addElement(header);
+
+        const comment = new Element('DIV', null, {
+            elementClass: 'view-comment',
+            text: 'Use this to import many missionary profile pictures at once. The images should be named =ID.jpg= or =ID.txt=, where "ID" is the name of the missionary.'
+        });
+
+        this.addElement(comment);
+
+        const button = new Element('BUTTON', null, {
+            elementClass: 'view-button',
+            text: 'Select Folder',
+            eventListener: ['click', () => {
+                const folderPath = dialog.showOpenDialogSync({
+                    properties: ['openDirectory']
+                });
+
+                if (folderPath) {
+                    let data = {};
+
+                    for (const fileName of fs.readdirSync(folderPath[0])) {
+                        const extension = path.extname(fileName).slice(1);
+                        const ID = path.basename(fileName, '.' + extension);
+
+                        if (extension !== 'txt' && extension !== 'jpg' || !/^\d{6}$/.test(ID)) {
+                            continue;
+                        }
+
+                        const filePath = path.join(folderPath[0], fileName);
+                        
+                        data[ID] = {
+                            filePath: filePath,
+                            extension: extension,
+                            id: ID
+                        };
+                    }
+
+                    this.database.importProfiles(data);
                 }
             }]
         });
