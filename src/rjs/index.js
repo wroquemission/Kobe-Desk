@@ -6,7 +6,8 @@ const viewCategories = {
         new ImportRosterView(database),
         new ImportAddressesView(database),
         new ImportAddressKeyView(database),
-        new ImportProfilesView(database)
+        new ImportProfilesView(database),
+        new ImportCoversView(database)
     ],
     'Create': [
         new CreateTransferDocsView(database)

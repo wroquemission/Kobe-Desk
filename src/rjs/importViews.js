@@ -186,3 +186,58 @@ class ImportProfilesView extends View {
         this.addElement(button);
     }
 }
+
+class ImportCoversView extends View {
+    get name() { return 'Covers'; }
+
+    build() {
+        const header = new Element('H1', null, {
+            elementClass: 'view-header',
+            text: 'Import Covers'
+        });
+
+        this.addElement(header);
+
+        const comment = new Element('DIV', null, {
+            elementClass: 'view-comment',
+            text: 'Use this to import several zone cover pictures at once. The images should be named =zone.png= or =zone.txt=, where "zone" is the name of the zone.'
+        });
+
+        this.addElement(comment);
+
+        const button = new Element('BUTTON', null, {
+            elementClass: 'view-button',
+            text: 'Select Folder',
+            eventListener: ['click', () => {
+                const folderPath = dialog.showOpenDialogSync({
+                    properties: ['openDirectory']
+                });
+
+                if (folderPath) {
+                    let data = {};
+
+                    for (const fileName of fs.readdirSync(folderPath[0])) {
+                        const extension = path.extname(fileName).slice(1);
+                        const ID = path.basename(fileName, '.' + extension);
+
+                        if (extension !== 'txt' && extension !== 'jpg' && extension !== 'png') {
+                            continue;
+                        }
+
+                        const filePath = path.join(folderPath[0], fileName);
+                        
+                        data[ID] = {
+                            filePath: filePath,
+                            extension: extension,
+                            id: ID
+                        };
+                    }
+
+                    this.database.importCovers(data);
+                }
+            }]
+        });
+
+        this.addElement(button);
+    }
+}

@@ -133,6 +133,20 @@ class Database {
         }
     }
 
+    importCovers(data) {
+        for (const ID in data) {
+            const { extension, filePath } = data[ID];
+
+            ipcRenderer.sendSync(
+                'save-image',
+                'Covers',
+                `${ID}.png`,
+                filePath,
+                extension === 'txt'
+            );
+        }
+    }
+
     saveData() {
         ipcRenderer.sendSync('save-data', [
             this.areas,
@@ -214,9 +228,42 @@ class Database {
         return zones;
     }
 
+    getZoneDistricts() {
+        let zones = {};
+
+        for (const areaName in this.areas) {
+            const area = this.areas[areaName];
+
+            if (area.zone in zones) {
+                if (area.district in zones[area.zone]) {
+                    zones[area.zone][area.district].push(area.name);
+                } else {
+                    zones[area.zone][area.district] = [area.name];
+                }
+            } else {
+                zones[area.zone] = {};
+                zones[area.zone][area.district] = [area.name];
+            }
+        }
+
+        return zones;
+    }
+
     getAreaNumber(area) {
         return Object.values(this.numbers).find(number => {
             return number.area === area;
+        });
+    }
+
+    getPersonArea(person) {
+        return Object.values(this.areas).find(area => {
+            return area.people.indexOf(person) > -1
+        });
+    }
+
+    getAllAreaNumbers(area) {
+        return Object.values(this.numbers).filter(number => {
+            return number.name === area;
         });
     }
 
@@ -229,7 +276,25 @@ class Database {
     getProfiles() {
         const data = ipcRenderer.sendSync('get-images', 'Profiles');
 
-        console.log(data)
+        let profiles = {};
+
+        for (const image of data) {
+            profiles[image.basename] = image.raw;
+        }
+
+        return profiles;
+    }
+
+    getCovers() {
+        const data = ipcRenderer.sendSync('get-images', 'Covers');
+
+        let covers = {};
+
+        for (const image of data) {
+            covers[image.basename] = image.raw;
+        }
+
+        return covers;
     }
 }
 

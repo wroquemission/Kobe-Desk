@@ -35,7 +35,12 @@ class FileIO {
 
     write(filePath, data, isBase64) {
         if (isBase64) {
-            data = data.toString().replace(/^data:image\/jpeg;base64,/, '');
+            if (path.extname(filePath) === '.png') {
+                data = data.toString().replace(/^data:image\/png;base64,/, '');
+            } else {
+                data = data.toString().replace(/^data:image\/jpeg;base64,/, '');
+            }
+
             fs.writeFile(filePath, data, 'base64', () => { });
         } else {
             fs.writeFile(filePath, data, () => { });

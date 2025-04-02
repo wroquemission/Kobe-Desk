@@ -112,9 +112,15 @@ ipcMain.on('get-images', (event, directory) => {
         const extension = path.extname(fileName).slice(1);
         const basename = path.basename(fileName, '.' + extension);
 
-        const raw = fs.readFileSync(
+        let raw = fs.readFileSync(
             path.join(fileio.normalize('Images'), directory, fileName)
-        );
+        ).toString('base64');
+
+        if (extension === 'png') {
+            raw = 'data:image/png;base64,' + raw;
+        } else if (extension === 'jpg' || extension === 'jpeg') {
+            raw = 'data:image/jpeg;base64,' + raw;
+        }
 
         return { basename, extension, raw };
     });
