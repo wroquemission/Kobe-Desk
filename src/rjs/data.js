@@ -129,7 +129,8 @@ class Database {
                 `${ID}.jpg`,
                 filePath,
                 extension === 'txt',
-                300
+                281,
+                337
             );
         }
     }
@@ -144,7 +145,8 @@ class Database {
                 `${ID}.png`,
                 filePath,
                 extension === 'txt',
-                600
+                600,
+                849
             );
         }
     }
@@ -156,7 +158,8 @@ class Database {
             `${zoneName}.png`,
             filePath,
             false,
-            600
+            600,
+            849
         );
     }
 

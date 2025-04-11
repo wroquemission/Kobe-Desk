@@ -145,7 +145,7 @@ class ImportProfilesView extends View {
 
         const comment = new Element('DIV', null, {
             elementClass: 'view-comment',
-            text: 'Use this to import many missionary profile pictures at once. The images should be named =ID.jpg= or =ID.txt=, where "ID" is the name of the missionary.'
+            text: 'Use this to import many missionary profile pictures at once. The images should be named =ID.jpg= or =ID.txt=, where "ID" is the name of the missionary. Since we will try compressing each image, this might take a few minutes.'
         });
 
         this.addElement(comment);

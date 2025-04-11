@@ -129,25 +129,35 @@ ipcMain.on('get-images', (event, directory) => {
     });
 });
 
-ipcMain.on('save-image', (event, directory, fileName, sourcePath, isBase64, maxWidth) => {
+ipcMain.on('save-image', (event, directory, fileName, sourcePath, isBase64, width, height) => {
     const filePath = path.join(fileio.normalize('Images'), directory, fileName);
 
     fs.mkdirSync(path.dirname(filePath), {
         recursive: true
     });
 
-    const data = fs.readFileSync(sourcePath);
+    let data = fs.readFileSync(sourcePath);
+
+    if (isBase64) {
+        data = Buffer.from(
+            data.toString().replace(/^data:image\/.*;base64,/g, ''),
+            'base64'
+        );
+    }
 
     sharp(data)
-        .resize(maxWidth, null, { withoutEnlargement: true })
+        .resize(width, height)
         .png({ force: false, compressionLevel: 9 })
         .toBuffer()
         .then(output => {
             fileio.write(
                 filePath,
-                output,
-                isBase64
+                output
             );
+
+            event.returnValue = '';
+        }).catch(() => {
+            console.log('Could not read', sourcePath);
 
             event.returnValue = '';
         });
@@ -189,8 +199,8 @@ const warningWinObject = {
     movable: true,
     titleBarStyle: 'hidden',
     titleBarOverlay: {
-        color: '#fff',
-        symbolColor: '#000',
+        color: '#292929',
+        symbolColor: '#fff',
     },
     width: 600,
     height: 450,
