@@ -72,7 +72,7 @@ class Database {
                     row['Missionary'],
                     row['ID'],
                     row['Type'],
-                    row['Assignment'],
+                    row['Position Abbr'],
                     row['Status'],
                     row['Arrival Date'],
                     row['Release Date']

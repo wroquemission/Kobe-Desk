@@ -220,3 +220,88 @@ button.view-gallery-button {
 ::-webkit-scrollbar {
     display: none;
 }
+
+.edit-view-row {
+    width: 550px;
+    display: flex;
+    flex-direction: row;
+    height: 100px;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Roboto';
+    font-size: 11pt;
+    border: solid 4px #c3c3c3;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 3px 20px;
+    cursor: pointer;
+    color: #333;
+}
+
+.edit-view-profile-image-wrapper {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 10px 0px #c3c3c3;
+}
+
+img.edit-view-profile {
+    width: 100%;
+    height: auto;
+}
+
+.edit-view-person-ID {
+    font-size: 9pt;
+    margin: 5px;
+    color: #7e7e7e;
+}
+
+.edit-view-profile-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-view-person-name {
+    background: #606060;
+    color: white;
+    padding: 10px;
+}
+
+.edit-view-person-area {
+    background: #ccc;
+    padding: 10px;
+    border-radius: 7px;
+}
+
+.edit-view-row.edit-view-not-in-field {
+    justify-content: flex-start;
+    border-color: #ffceab;
+}
+
+.edit-view-row.edit-view-not-in-field div {
+    margin-right: 10px;
+}
+
+.edit-view-row.edit-view-not-in-field .edit-view-person-name {
+    background: #ffbc8d;
+}
+
+button.edit-view-pagination-left, button.edit-view-pagination-right {
+    font-family: 'Material Icons';
+    padding: 5px 20px;
+    font-size: 14pt;
+    border: none;
+    background: #c0c0c0;
+    color: white;
+    cursor: pointer;
+}
+
+.edit-view-pagination {
+    width: 135px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}

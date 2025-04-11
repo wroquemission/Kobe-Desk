@@ -11,6 +11,9 @@ const viewCategories = {
     ],
     'Create': [
         new CreateTransferDocsView(database)
+    ],
+    'Edit': [
+        new EditPeopleView(database)
     ]
 };
 
@@ -22,5 +25,5 @@ for (const category in viewCategories) {
     }
 }
 
-viewNavigator.selectCategory('Create');
+viewNavigator.selectCategory('Edit');
 viewNavigator.renderTitlebar();
