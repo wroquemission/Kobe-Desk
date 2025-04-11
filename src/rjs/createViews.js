@@ -16,6 +16,63 @@ class CreateTransferDocsView extends View {
 
         this.addElement(comment);
 
+        const zoneAreas = this.database.getZoneAreas();
+        const covers = this.database.getCovers();
+
+        const coverGallery = new Element('DIV', null, {
+            elementClass: 'view-double-gallery'
+        });
+
+        for (const zoneName in zoneAreas) {
+            const galleryEntry = new Element('DIV', coverGallery, {
+                elementClass: 'view-gallery-entry'
+            });
+
+            new Element('H2', galleryEntry, {
+                elementClass: 'view-gallery-header',
+                text: zoneName
+            });
+
+            const image = new Element('IMG', galleryEntry, {
+                elementClass: 'view-gallery-picture',
+                attributes: {
+                    'SRC': covers[zoneName]
+                }
+            });
+
+            new Element('BUTTON', galleryEntry, {
+                elementClass: 'view-gallery-button',
+                text: 'Upload',
+                eventListener: ['click', () => {
+                    const filePath = dialog.showOpenDialogSync({
+                        properties: ['openFile'],
+                        filters: [
+                            { name: 'JPEG', extensions: ['jpg', 'jpeg'] },
+                            { name: 'PNG', extensions: ['png'] }
+                        ]
+                    });
+
+                    if (filePath) {
+                        this.database.importCover(filePath[0], zoneName);
+
+                        const extension = path.extname(filePath[0]).slice(1);
+
+                        let raw = fs.readFileSync(filePath[0]).toString('base64');
+
+                        if (extension === 'png') {
+                            raw = 'data:image/png;base64,' + raw;
+                        } else if (extension === 'jpg' || extension === 'jpeg') {
+                            raw = 'data:image/jpeg;base64,' + raw;
+                        }
+
+                        image.element.src = raw;
+                    }
+                }]
+            });
+        }
+
+        this.addElement(coverGallery);
+
         const button = new Element('BUTTON', null, {
             elementClass: 'view-button',
             text: 'Generate',

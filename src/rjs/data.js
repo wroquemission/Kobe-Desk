@@ -147,6 +147,16 @@ class Database {
         }
     }
 
+    importCover(filePath, zoneName) {
+        ipcRenderer.sendSync(
+            'save-image',
+            'Covers',
+            `${zoneName}.png`,
+            filePath,
+            false
+        );
+    }
+
     saveData() {
         ipcRenderer.sendSync('save-data', [
             this.areas,
