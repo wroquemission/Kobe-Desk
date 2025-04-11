@@ -29,6 +29,8 @@ const fixPath = require('fix-path');
 const { create } = require('domain');
 fixPath();
 
+const sharp = require('sharp');
+
 const mainWinObject = {
     icon: '../assets/icon.png',
     titleBarStyle: 'hidden',
@@ -127,7 +129,7 @@ ipcMain.on('get-images', (event, directory) => {
     });
 });
 
-ipcMain.on('save-image', (event, directory, fileName, sourcePath, isBase64) => {
+ipcMain.on('save-image', (event, directory, fileName, sourcePath, isBase64, maxWidth) => {
     const filePath = path.join(fileio.normalize('Images'), directory, fileName);
 
     fs.mkdirSync(path.dirname(filePath), {
@@ -136,13 +138,19 @@ ipcMain.on('save-image', (event, directory, fileName, sourcePath, isBase64) => {
 
     const data = fs.readFileSync(sourcePath);
 
-    const files = fileio.write(
-        filePath,
-        data,
-        isBase64
-    );
+    sharp(data)
+        .resize(maxWidth, null, { withoutEnlargement: true })
+        .png({ force: false, compressionLevel: 9 })
+        .toBuffer()
+        .then(output => {
+            fileio.write(
+                filePath,
+                output,
+                isBase64
+            );
 
-    event.returnValue = '';
+            event.returnValue = '';
+        });
 });
 
 ipcMain.on('save-pdf', event => {

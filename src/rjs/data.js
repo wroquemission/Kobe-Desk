@@ -128,7 +128,8 @@ class Database {
                 'Profiles',
                 `${ID}.jpg`,
                 filePath,
-                extension === 'txt'
+                extension === 'txt',
+                300
             );
         }
     }
@@ -142,7 +143,8 @@ class Database {
                 'Covers',
                 `${ID}.png`,
                 filePath,
-                extension === 'txt'
+                extension === 'txt',
+                600
             );
         }
     }
@@ -153,7 +155,8 @@ class Database {
             'Covers',
             `${zoneName}.png`,
             filePath,
-            false
+            false,
+            600
         );
     }
 

@@ -23,20 +23,23 @@ class CreateTransferDocsView extends View {
             elementClass: 'view-double-gallery'
         });
 
-        for (const zoneName in zoneAreas) {
+        let names = Object.keys(zoneAreas);
+        names.splice(0, 0, 'Cover');
+
+        for (const name of names) {
             const galleryEntry = new Element('DIV', coverGallery, {
                 elementClass: 'view-gallery-entry'
             });
 
             new Element('H2', galleryEntry, {
                 elementClass: 'view-gallery-header',
-                text: zoneName
+                text: name
             });
 
             const image = new Element('IMG', galleryEntry, {
                 elementClass: 'view-gallery-picture',
                 attributes: {
-                    'SRC': covers[zoneName]
+                    'SRC': covers[name]
                 }
             });
 
@@ -47,14 +50,11 @@ class CreateTransferDocsView extends View {
                     const filePath = dialog.showOpenDialogSync({
                         properties: ['openFile'],
                         filters: [
-                            { name: 'JPEG', extensions: ['jpg', 'jpeg'] },
-                            { name: 'PNG', extensions: ['png'] }
+                            { name: 'Image', extensions: ['jpg', 'jpeg', 'png' ] }
                         ]
                     });
 
                     if (filePath) {
-                        this.database.importCover(filePath[0], zoneName);
-
                         const extension = path.extname(filePath[0]).slice(1);
 
                         let raw = fs.readFileSync(filePath[0]).toString('base64');
@@ -66,6 +66,8 @@ class CreateTransferDocsView extends View {
                         }
 
                         image.element.src = raw;
+
+                        this.database.importCover(filePath[0], name);
                     }
                 }]
             });
