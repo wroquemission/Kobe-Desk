@@ -19,6 +19,8 @@ class ViewNavigator {
     }
 
     addView(category, view) {
+        view.navigator = this;
+
         if (category in this.categories) {
             this.categories[category].push(view);
         } else {
@@ -111,6 +113,32 @@ class ViewNavigator {
         contentWrapper.addChild(
             this.renderViewList()
         );
+
+        contentWrapper.render();
+    }
+
+    renderDetailsBar(parentView, title) {
+        while (titlebarElement.firstChild) {
+            titlebarElement.firstChild.remove();
+        }
+
+        const contentWrapper = new Element('DIV', titlebarElement, {
+            elementClass: 'titlebar-details-wrapper'
+        });
+
+        new Element('DIV', contentWrapper, {
+            elementClass: 'titlebar-details-back',
+            text: 'arrow_back',
+            eventListener: ['click', () => {
+                this.renderTitlebar();
+                parentView.render();
+            }]
+        });
+
+        new Element('DIV', contentWrapper, {
+            elementClass: 'titlebar-details-title',
+            text: title
+        });
 
         contentWrapper.render();
     }

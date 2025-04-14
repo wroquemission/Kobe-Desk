@@ -8,24 +8,35 @@ class EditPeopleView extends View {
         });
     }
 
-    getEntries(start, end) {
+    getEntries() {
         const profiles = this.database.getProfiles();
 
         const table = new Element('DIV', null, {
             elementClass: 'edit-view-table'
         });
 
-        let i = 0;
+        const people = Object.values(this.database.people);
 
-        for (const person of Object.values(this.database.people)) {
-            if (i >= this.entriesPerPage) {
-                break;
-            }
+        const start = this.page * this.entriesPerPage;
+        const end = Math.min(people.length, (this.page + 1) * this.entriesPerPage);
+
+        for (let i = start; i < end; i++) {
+            const person = people[i];
 
             const isInField = person.status === 'In-Field';
 
             const row = new Element('DIV', table, {
-                elementClass: ['edit-view-row', isInField ? 'edit-view-in-field' : 'edit-view-not-in-field']
+                elementClass: ['edit-view-row', isInField ? 'edit-view-in-field' : 'edit-view-not-in-field'],
+                eventListener: ['click', () => {
+                    const view = new EditPeopleDetailsView(
+                        this.database,
+                        this.navigator,
+                        this,
+                        person.name
+                    );
+
+                    view.render();
+                }]
             });
 
             const profileWrapper = new Element('DIV', row, {
@@ -95,7 +106,7 @@ class EditPeopleView extends View {
 
         this.addElement(header);
 
-        const table = this.getEntries(0, this.entriesPerPage);
+        const table = this.getEntries();
 
         this.addElement(table);
 
@@ -103,18 +114,74 @@ class EditPeopleView extends View {
             elementClass: 'edit-view-pagination'
         });
 
-        new Element('BUTTON', pagination, {
-            elementClass: 'edit-view-pagination-left',
-            text: 'arrow_back'
+        const peopleCount = Object.keys(this.database.people).length;
+
+        const leftButton = new Element('BUTTON', pagination, {
+            elementClass: [
+                'edit-view-pagination-left',
+                this.page === 0 ? 'edit-view-pagination-inactive' : ''
+            ],
+            text: 'arrow_back',
+            eventListener: ['click', () => {
+                if (this.page > 0) {
+                    this.page--;
+                    table.replace(
+                        this.getEntries()
+                    );
+
+                    this.resetScroll();
+                }
+
+                if (this.page === 0) {
+                    leftButton.element.classList.add('edit-view-pagination-inactive');
+                }
+
+                if ((this.page + 1) * this.entriesPerPage < peopleCount) {
+                    rightButton.element.classList.remove('edit-view-pagination-inactive');
+                }
+            }],
+            attributes: {
+                'tabindex': '-1'
+            }
         });
 
-        new Element('BUTTON', pagination, {
-            elementClass: 'edit-view-pagination-right',
-            text: 'arrow_forward'
+        const rightButton = new Element('BUTTON', pagination, {
+            elementClass: [
+                'edit-view-pagination-right',
+                (this.page + 1) * this.entriesPerPage >= peopleCount ? 'edit-view-pagination-inactive' : ''
+            ],
+            text: 'arrow_forward',
+            eventListener: ['click', () => {
+                if ((this.page + 1) * this.entriesPerPage < peopleCount) {
+                    this.page++;
+                    table.replace(
+                        this.getEntries()
+                    );
+
+                    this.resetScroll();
+                }
+
+                if (this.page > 0) {
+                    leftButton.element.classList.remove('edit-view-pagination-inactive');
+                }
+
+                if ((this.page + 1) * this.entriesPerPage >= peopleCount) {
+                    rightButton.element.classList.add('edit-view-pagination-inactive');
+                }
+            }],
+            attributes: {
+                'tabindex': '-1'
+            }
         });
 
         this.addElement(pagination);
 
         super.render();
+    }
+}
+
+class EditPeopleDetailsView extends DetailsView {
+    build() {
+
     }
 }

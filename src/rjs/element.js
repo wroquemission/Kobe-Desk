@@ -71,7 +71,9 @@ class Element {
         const element = document.createElement(this.tag);
 
         elementClass.forEach(x => {
-            element.classList.add(x);
+            if (x) {
+                element.classList.add(x);
+            }
         });
 
         if (ID) {
@@ -118,5 +120,28 @@ class Element {
         this.element = element;
 
         return element;
+    }
+
+    replace(element) {
+        this.children = [];
+
+        for (const child of element.children) {
+            this.addChild(child);
+        }
+
+        this.tag = element.tag;
+        this.parameters = element.parameters;
+
+        element.parent = null;
+
+        if (this.element) {
+            const parentNode = this.element.parentNode;
+            const newNode = element.render();
+
+            parentNode.insertBefore(newNode, this.element);
+            this.element.remove();
+
+            this.element = newNode;
+        }
     }
 }

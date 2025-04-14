@@ -294,9 +294,14 @@ button.edit-view-pagination-left, button.edit-view-pagination-right {
     padding: 5px 20px;
     font-size: 14pt;
     border: none;
-    background: #c0c0c0;
+    background: #666666;
     color: white;
     cursor: pointer;
+}
+
+button.edit-view-pagination-left.edit-view-pagination-inactive {
+    background: #c0c0c0;
+    cursor: default;
 }
 
 .edit-view-pagination {
@@ -304,4 +309,28 @@ button.edit-view-pagination-left, button.edit-view-pagination-right {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
+}
+
+.titlebar-details-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    color: #fff;
+    font-weight: 100;
+    justify-content: center;
+    align-items: center;
+}
+
+.titlebar-details-back {
+    font-family: 'Material Icons';
+    position: absolute;
+    left: 10px;
+    font-size: 15pt;
+    color: #fff;
+    -webkit-app-region: none;
+    cursor: pointer;
+}
+
+button {
+    outline: none;
 }

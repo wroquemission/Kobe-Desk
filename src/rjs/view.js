@@ -1,11 +1,18 @@
 const viewContainer = document.querySelector('#view');
 
+viewContainer.onload = () => {
+    viewContainer.scrollTo(0, 0);
+    window.scrollTo(0, 0);
+};
+
 class View {
     get name() { return undefined; }
 
     constructor(database, properties) {
         this.database = database;
         this.elements = [];
+
+        this.navigator = undefined;
 
         if (properties) {
             for (const property in properties) {
@@ -14,6 +21,11 @@ class View {
         }
 
         this.build();
+    }
+
+    resetScroll() {
+        window.scrollTo(0, 0);
+        viewContainer.scrollTo(0, 0);
     }
 
     addElement(element) {
@@ -32,5 +44,28 @@ class View {
                 element.render()
             );
         }
+
+        this.resetScroll();
+    }
+}
+
+class DetailsView extends View {
+    get name() { return undefined; }
+
+    constructor(database, navigator, parentView, title, properties) {
+        super(database, properties);
+
+        this.parentView = parentView;
+        this.navigator = navigator;
+        this.title = title;
+    }
+
+    render() {
+        super.render();
+
+        this.navigator.renderDetailsBar(
+            this.parentView,
+            this.title
+        );
     }
 }
