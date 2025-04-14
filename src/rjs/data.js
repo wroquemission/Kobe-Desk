@@ -163,6 +163,18 @@ class Database {
         );
     }
 
+    importProfile(filePath, ID) {
+        ipcRenderer.sendSync(
+            'save-image',
+            'Profiles',
+            `${ID}.jpg`,
+            filePath,
+            false,
+            281,
+            337
+        );
+    }
+
     saveData() {
         ipcRenderer.sendSync('save-data', [
             this.areas,
