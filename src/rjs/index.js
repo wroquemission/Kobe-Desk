@@ -13,7 +13,8 @@ const viewCategories = {
         new CreateTransferDocsView(database)
     ],
     'Edit': [
-        new EditPeopleView(database)
+        new EditPeopleView(database),
+        new EditAddressesView(database)
     ]
 };
 

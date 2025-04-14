@@ -382,3 +382,35 @@ button.edit-details-profile-button {
     padding: 0 25px;
     outline: none;
 }
+
+.edit-view-address-postal-code {
+    min-width: 75px;
+    text-align: center;
+}
+
+.edit-view-address-wrapper {
+    padding: 14px;
+}
+
+.edit-view-address-row {
+    width: 550px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-family: 'Roboto';
+    font-size: 11pt;
+    border: solid 4px #c3c3c3;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 3px 20px;
+    cursor: pointer;
+    color: #333;
+}
+
+.edit-view-address-japanese {
+    color: #7e7e7e;
+}
+
+.edit-view-address-english {
+    margin-bottom: 3px;
+}

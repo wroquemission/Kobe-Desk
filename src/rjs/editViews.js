@@ -1,14 +1,11 @@
-class EditPeopleView extends View {
+class EditPeopleView extends PaginatedView {
     get name() { return 'People'; }
 
-    constructor(database) {
-        super(database, {
-            page: 0,
-            entriesPerPage: 10
-        });
+    getCount() {
+        return Object.keys(this.database.people).length;
     }
 
-    getEntries() {
+    getEntries(start, end) {
         const profiles = this.database.getProfiles();
 
         const table = new Element('DIV', null, {
@@ -16,9 +13,6 @@ class EditPeopleView extends View {
         });
 
         const people = Object.values(this.database.people);
-
-        const start = this.page * this.entriesPerPage;
-        const end = Math.min(people.length, (this.page + 1) * this.entriesPerPage);
 
         for (let i = start; i < end; i++) {
             const person = people[i];
@@ -98,89 +92,6 @@ class EditPeopleView extends View {
         }
         
         return table;
-    }
-
-    render() {
-        this.elements = [];
-
-        const header = new Element('H1', null, {
-            elementClass: 'view-header',
-            text: 'People'
-        });
-
-        this.addElement(header);
-
-        const table = this.getEntries();
-
-        this.addElement(table);
-
-        const pagination = new Element('DIV', null, {
-            elementClass: 'edit-view-pagination'
-        });
-
-        const peopleCount = Object.keys(this.database.people).length;
-
-        const leftButton = new Element('BUTTON', pagination, {
-            elementClass: [
-                'edit-view-pagination-left',
-                this.page === 0 ? 'edit-view-pagination-inactive' : ''
-            ],
-            text: 'arrow_back',
-            eventListener: ['click', () => {
-                if (this.page > 0) {
-                    this.page--;
-                    table.replace(
-                        this.getEntries()
-                    );
-
-                    this.resetScroll();
-                }
-
-                if (this.page === 0) {
-                    leftButton.element.classList.add('edit-view-pagination-inactive');
-                }
-
-                if ((this.page + 1) * this.entriesPerPage < peopleCount) {
-                    rightButton.element.classList.remove('edit-view-pagination-inactive');
-                }
-            }],
-            attributes: {
-                'tabindex': '-1'
-            }
-        });
-
-        const rightButton = new Element('BUTTON', pagination, {
-            elementClass: [
-                'edit-view-pagination-right',
-                (this.page + 1) * this.entriesPerPage >= peopleCount ? 'edit-view-pagination-inactive' : ''
-            ],
-            text: 'arrow_forward',
-            eventListener: ['click', () => {
-                if ((this.page + 1) * this.entriesPerPage < peopleCount) {
-                    this.page++;
-                    table.replace(
-                        this.getEntries()
-                    );
-
-                    this.resetScroll();
-                }
-
-                if (this.page > 0) {
-                    leftButton.element.classList.remove('edit-view-pagination-inactive');
-                }
-
-                if ((this.page + 1) * this.entriesPerPage >= peopleCount) {
-                    rightButton.element.classList.add('edit-view-pagination-inactive');
-                }
-            }],
-            attributes: {
-                'tabindex': '-1'
-            }
-        });
-
-        this.addElement(pagination);
-
-        super.render();
     }
 }
 
@@ -276,6 +187,120 @@ class EditPeopleDetailsView extends DetailsView {
                 },
                 eventListener: ['change', () => {
                     person[identifier] = input.element.value;
+                    this.database.saveData();
+                }]
+            });
+        }
+
+        this.addElement(table);
+    }
+}
+
+class EditAddressesView extends PaginatedView {
+    get name() { return 'Addresses'; }
+
+    getCount() {
+        return Object.keys(this.database.addresses).length;
+    }
+
+    getEntries(start, end) {
+        const table = new Element('DIV', null, {
+            elementClass: 'edit-view-table'
+        });
+
+        const addresses = Object.values(this.database.addresses);
+
+        for (let i = start; i < end; i++) {
+            const address = addresses[i];
+
+            const row = new Element('DIV', table, {
+                elementClass: 'edit-view-address-row',
+                eventListener: ['click', () => {
+                    const view = new EditAddressesDetailsView(
+                        this.database,
+                        this.navigator,
+                        this,
+                        address.name,
+                        { address }
+                    );
+
+                    view.render();
+                }]
+            });
+
+            new Element('DIV', row, {
+                elementClass: 'edit-view-address-postal-code',
+                text: address.postalCode
+            });
+
+            const addressWrapper = new Element('DIV', row, {
+                elementClass: 'edit-view-address-wrapper'
+            });
+
+            new Element('DIV', addressWrapper, {
+                elementClass: 'edit-view-address-english',
+                text: address.englishAddress
+            });
+
+            new Element('DIV', addressWrapper, {
+                elementClass: 'edit-view-address-japanese',
+                text: address.japaneseAddress
+            });
+
+            i++;
+        }
+        
+        return table;
+    }
+}
+
+class EditAddressesDetailsView extends DetailsView {
+    build() {
+        const address = this.address;
+
+        const header = new Element('H1', null, {
+            elementClass: 'view-header',
+            text: address.name
+        });
+
+        this.addElement(header);
+
+        const table = new Element('TABLE', null, {
+            elementClass: 'edit-details-table'
+        });
+
+        const fields = [
+            ['Postal Code', 'postalCode', 'text'],
+            ['English Address', 'englishAddress', 'text'],
+            ['Japanese Address', 'japaneseAddress', 'text'],
+        ];
+
+        for (const field of fields) {
+            const [ title, identifier, type ] = field;
+
+            const row = new Element('TR', table, {
+                elementClass: 'edit-details-table-row'
+            });
+
+            new Element('TD', row, {
+                elementClass: 'edit-details-table-header',
+                text: title
+            });
+
+            const valueColumn = new Element('TD', row, {
+                elementClass: 'edit-details-table-value-column',
+            });
+
+            const value = address[identifier];
+
+            const input = new Element('INPUT', valueColumn, {
+                elementClass: 'edit-details-table-value-input',
+                attributes: {
+                    value: type === 'date' ? (new Date(value)).toISOString().split('T')[0] : value,
+                    type: type
+                },
+                eventListener: ['change', () => {
+                    address[identifier] = input.element.value;
                     this.database.saveData();
                 }]
             });
