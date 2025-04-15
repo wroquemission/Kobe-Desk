@@ -60,6 +60,11 @@ class DetailsView extends View {
         this.title = title;
     }
 
+    navigateBack() {
+        this.navigator.renderTitlebar();
+        this.parentView.render();
+    }
+
     render() {
         super.render();
 
@@ -74,7 +79,7 @@ class PaginatedView extends View {
     constructor(database) {
         super(database, {
             page: 0,
-            entriesPerPage: 10
+            entriesPerPage: 25
         });
     }
 

@@ -87,8 +87,6 @@ class EditPeopleView extends PaginatedView {
                 elementClass: 'edit-view-person-zone',
                 text: area.zone
             });
-
-            i++;
         }
         
         return table;
@@ -228,12 +226,16 @@ class EditAddressesView extends PaginatedView {
                 }]
             });
 
-            new Element('DIV', row, {
+            const upperWrapper = new Element('DIV', row, {
+                elementClass: 'edit-view-address-upper-wrapper'
+            });
+
+            new Element('DIV', upperWrapper, {
                 elementClass: 'edit-view-address-postal-code',
                 text: address.postalCode
             });
 
-            const addressWrapper = new Element('DIV', row, {
+            const addressWrapper = new Element('DIV', upperWrapper, {
                 elementClass: 'edit-view-address-wrapper'
             });
 
@@ -247,10 +249,53 @@ class EditAddressesView extends PaginatedView {
                 text: address.japaneseAddress
             });
 
-            i++;
+            const areasWrapper = new Element('DIV', row, {
+                elementClass: 'edit-view-address-areas-wrapper'
+            });
+
+            for (const area of address.areas) {
+                new Element('DIV', areasWrapper, {
+                    elementClass: 'edit-view-address-area',
+                    text: area
+                });
+            }
         }
         
         return table;
+    }
+
+    render() {
+        super.render();
+        
+        const controlsWrapper = new Element('DIV', null, {
+            elementClass: 'edit-details-controls-wrapper'
+        });
+
+        new Element('INPUT', controlsWrapper, {
+            elementClass: 'edit-details-search-input',
+            attributes: {
+                placeholder: 'Search...'
+            }
+        });
+
+        new Element('BUTTON', controlsWrapper, {
+            elementClass: 'edit-details-add-button',
+            text: 'add',
+            eventListener: ['click', () => {
+                const view = new EditAddressesAddView(
+                    this.database,
+                    this.navigator,
+                    this,
+                    'Add Address'
+                );
+
+                view.render();
+            }]
+        });
+
+        this.elements[0].element.after(
+            controlsWrapper.render()
+        );
     }
 }
 
@@ -307,5 +352,259 @@ class EditAddressesDetailsView extends DetailsView {
         }
 
         this.addElement(table);
+
+        let areas = [];
+
+        const areasWrapper = new Element('DIV', null, {
+            elementClass: 'edit-add-areas-wrapper'
+        });
+
+        const areasList = new Element('DIV', areasWrapper, {
+            elementClass: 'edit-add-areas-list'
+        });
+
+        const areasSelectWrapper = new Element('DIV', areasWrapper, {
+            elementClass: 'edit-add-areas-select-wrapper'
+        });
+
+        const areasSelect = new Element('SELECT', areasSelectWrapper, {
+            elementClass: 'edit-add-areas-select'
+        });
+
+        new Element('OPTION', areasSelect, {
+            text: ''
+        });
+
+        for (const areaName in this.database.areas) {
+            new Element('OPTION', areasSelect, {
+                text: areaName
+            });
+        }
+
+        for (const area of address.areas) {
+            areas.push(area);
+
+            const areaListElement = new Element('DIV', areasList, {
+                elementClass: 'edit-add-areas-list-element'
+            });
+
+            new Element('DIV', areaListElement, {
+                elementClass: 'edit-add-areas-list-area',
+                text: area
+            });
+
+            new Element('BUTTON', areaListElement, {
+                elementClass: 'edit-add-areas-list-delete',
+                text: 'close',
+                eventListener: ['click', () => {
+                    areaListElement.element.remove();
+                    areas = areas.filter(x => x !== area);
+                    address.areas = areas;
+
+                    this.database.saveData();
+                }]
+            });
+        }
+
+        new Element('BUTTON', areasSelectWrapper, {
+            elementClass: 'edit-add-areas-select-button',
+            text: 'add',
+            eventListener: ['click', () => {
+                const value = areasSelect.element.value;
+
+                if (value && areas.indexOf(value) === -1) {
+                    areas.push(value);
+
+                    address.areas = areas;
+                    this.database.saveData();
+
+                    const areaListElement = new Element('DIV', null, {
+                        elementClass: 'edit-add-areas-list-element'
+                    });
+
+                    new Element('DIV', areaListElement, {
+                        elementClass: 'edit-add-areas-list-area',
+                        text: value
+                    });
+
+                    new Element('BUTTON', areaListElement, {
+                        elementClass: 'edit-add-areas-list-delete',
+                        text: 'close',
+                        eventListener: ['click', () => {
+                            areaListElement.element.remove();
+                            areas = areas.filter(x => x !== value);
+                            address.areas = areas;
+
+                            this.database.saveData();
+                        }]
+                    });
+
+                    areasList.element.appendChild(
+                        areaListElement.render()
+                    );
+
+                    areasSelect.element.value = '';
+                }
+            }]
+        });
+
+        this.addElement(areasWrapper);
+
+        const deleteButton = new Element('BUTTON', null, {
+            elementClass: 'edit-view-delete-button',
+            text: 'DELETE',
+            eventListener: ['click', () => {
+                delete this.database.addresses[this.address.name];
+                this.database.saveData();
+
+                this.navigateBack();
+            }]
+        });
+
+        this.addElement(deleteButton);
+    }
+}
+
+class EditAddressesAddView extends DetailsView {
+    build() {
+        const header = new Element('H1', null, {
+            elementClass: 'view-header',
+            text: 'Add Address'
+        });
+
+        this.addElement(header);
+
+        const table = new Element('TABLE', null, {
+            elementClass: 'edit-details-table'
+        });
+
+        const fields = [
+            ['Name', 'name'],
+            ['Postal Code', 'postalCode'],
+            ['English Address', 'englishAddress'],
+            ['Japanese Address', 'japaneseAddress'],
+        ];
+
+        let inputValues = {};
+
+        for (const field of fields) {
+            const [title, identifier] = field;
+
+            inputValues[identifier] = '';
+
+            const row = new Element('TR', table, {
+                elementClass: 'edit-details-table-row'
+            });
+
+            new Element('TD', row, {
+                elementClass: 'edit-details-table-header',
+                text: title
+            });
+
+            const valueColumn = new Element('TD', row, {
+                elementClass: 'edit-details-table-value-column',
+            });
+
+            const input = new Element('INPUT', valueColumn, {
+                elementClass: 'edit-details-table-value-input',
+                attributes: {
+                    type: 'text'
+                },
+                eventListener: ['change', () => {
+                    inputValues[identifier] = input.element.value;
+                }]
+            });
+        }
+
+        this.addElement(table);
+
+        let areas = [];
+
+        const areasWrapper = new Element('DIV', null, {
+            elementClass: 'edit-add-areas-wrapper'
+        });
+
+        const areasList = new Element('DIV', areasWrapper, {
+            elementClass: 'edit-add-areas-list'
+        });
+
+        const areasSelectWrapper = new Element('DIV', areasWrapper, {
+            elementClass: 'edit-add-areas-select-wrapper'
+        });
+
+        const areasSelect = new Element('SELECT', areasSelectWrapper, {
+            elementClass: 'edit-add-areas-select'
+        });
+
+        new Element('OPTION', areasSelect, {
+            text: ''
+        });
+
+        for (const areaName in this.database.areas) {
+            new Element('OPTION', areasSelect, {
+                text: areaName
+            });
+        }
+
+        new Element('BUTTON', areasSelectWrapper, {
+            elementClass: 'edit-add-areas-select-button',
+            text: 'add',
+            eventListener: ['click', () => {
+                const value = areasSelect.element.value;
+
+                if (value && areas.indexOf(value) === -1) {
+                    areas.push(value);
+
+                    const areaListElement = new Element('DIV', null, {
+                        elementClass: 'edit-add-areas-list-element'
+                    });
+
+                    new Element('DIV', areaListElement, {
+                        elementClass: 'edit-add-areas-list-area',
+                        text: value
+                    });
+
+                    new Element('BUTTON', areaListElement, {
+                        elementClass: 'edit-add-areas-list-delete',
+                        text: 'close',
+                        eventListener: ['click', () => {
+                            areaListElement.element.remove();
+                            areas = areas.filter(x => x !== value);
+                        }]
+                    });
+
+                    areasList.element.appendChild(
+                        areaListElement.render()
+                    );
+
+                    areasSelect.element.value = '';
+                }
+            }]
+        });
+
+        this.addElement(areasWrapper);
+
+        const submitButton = new Element('BUTTON', null, {
+            elementClass: 'edit-add-submit-button',
+            text: 'Add',
+            eventListener: ['click', () => {
+                if (Object.values(inputValues).every(x => x)) {
+                    const address = new Address(
+                        inputValues.name,
+                        inputValues.postalCode,
+                        inputValues.englishAddress,
+                        inputValues.japaneseAddress,
+                        areas
+                    );
+
+                    this.database.addAddress(address);
+                    this.database.saveData();
+
+                    this.navigateBack();
+                }
+            }]
+        });
+
+        this.addElement(submitButton);
     }
 }

@@ -158,6 +158,7 @@ h1.view-header {
     color: #5d5d5d;
     font-weight: 100;
     margin-bottom: 1.1em;
+    user-select: none;
 }
 
 .view-comment {
@@ -305,7 +306,7 @@ button.edit-view-pagination-left.edit-view-pagination-inactive {
 }
 
 .edit-view-pagination {
-    width: 135px;
+    width: 594px;
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
@@ -395,14 +396,14 @@ button.edit-details-profile-button {
 .edit-view-address-row {
     width: 550px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     font-family: 'Roboto';
     font-size: 11pt;
     border: solid 4px #c3c3c3;
     border-radius: 10px;
     margin: 10px;
-    padding: 3px 20px;
+    padding: 4px 20px;
     cursor: pointer;
     color: #333;
 }
@@ -413,4 +414,155 @@ button.edit-details-profile-button {
 
 .edit-view-address-english {
     margin-bottom: 3px;
+}
+
+.edit-view-address-upper-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.edit-view-address-areas-wrapper {
+    padding-bottom: 10px;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.edit-view-address-area {
+    background: #606060;
+    color: white;
+    padding: 10px;
+    margin: 5px;
+}
+
+.edit-details-controls-wrapper {
+    width: 594px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+input.edit-details-search-input {
+    border: none;
+    border-bottom: solid 2px #ccc;
+    outline: none;
+    font-family: 'Roboto';
+    font-size: 11pt;
+    padding: 5px 8px;
+}
+
+button.edit-details-add-button {
+    font-family: 'Material Icons';
+    width: 59px;
+    padding: 5px;
+    background: #4a4a4a;
+    color: white;
+    font-size: 12pt;
+    border: none;
+    cursor: pointer;
+}
+
+button.edit-add-submit-button {
+    margin: 10px;
+    min-height: 35px;
+    width: 350px;
+    text-transform: uppercase;
+    font-family: 'Roboto';
+    font-size: 10pt;
+    color: #626262;
+    background: #fff;
+    border: solid 2px #767676;
+    cursor: pointer;
+    padding: 0 25px;
+    outline: none;
+}
+
+.edit-add-areas-list {
+    width: 100%;
+    font-family: 'Roboto';
+    font-size: 11pt;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    /* margin: 13px; */
+}
+
+.edit-add-areas-list-element {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 52px;
+    padding:  10px;
+    margin: 5px;
+    border: solid 2px #eee;
+}
+
+.edit-add-areas-wrapper {
+    width: 350px;
+    margin: 10px;
+}
+
+button.edit-add-areas-list-delete {
+    font-family: 'Material Icons';
+    background: #d8d8d8;
+    color: white;
+    border: none;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+}
+
+.edit-add-areas-list-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-add-areas-select-wrapper {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    box-sizing: border-box;
+}
+
+select.edit-add-areas-select {
+    height: 100%;
+    width: 100%;
+    margin-right: 10px;
+    font-family: 'Roboto';
+    padding: 10px;
+}
+
+button.edit-add-areas-select-button {
+    height: 40px;
+    width: 40px;
+    font-family: 'Material Icons';
+    font-size: 10pt;
+    color: #ffffff;
+    border: none;
+    background: #333;
+    cursor: pointer;
+    outline: none;
+}
+
+button.edit-view-delete-button {
+    height: 40px;
+    width: 350px;
+    font-family: 'Roboto';
+    font-size: 10pt;
+    color: #ffffff;
+    border: none;
+    background: #ff7d7d;
+    cursor: pointer;
+    margin-top: 10px;
+    outline: none;
 }
