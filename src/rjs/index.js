@@ -10,7 +10,8 @@ const viewCategories = {
         new ImportCoversView(database)
     ],
     'Create': [
-        new CreateTransferDocsView(database)
+        new CreateTransferDocsView(database),
+        new CreateContactsView(database)
     ],
     'Edit': [
         new EditPeopleView(database),

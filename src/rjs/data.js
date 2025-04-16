@@ -198,6 +198,22 @@ class Database {
         return profile;
     }
 
+    importContactFace(filePath, zoneName) {
+        const contactFace = ipcRenderer.sendSync(
+            'save-image',
+            'ContactFaces',
+            `${zoneName}.png`,
+            filePath,
+            false,
+            300,
+            300
+        );
+        
+        showMessage('Imported contact face.');
+
+        return contactFace;
+    }
+
     saveData() {
         ipcRenderer.sendSync('save-data', [
             this.areas,
@@ -313,7 +329,7 @@ class Database {
 
     getAreaNumber(area) {
         return Object.values(this.numbers).find(number => {
-            return number.area === area;
+            return number.name === area;
         });
     }
 
@@ -357,6 +373,18 @@ class Database {
         }
 
         return covers;
+    }
+
+    getContactFaces() {
+        const data = ipcRenderer.sendSync('get-images', 'ContactFaces');
+
+        let contactFaces = {};
+
+        for (const image of data) {
+            contactFaces[image.basename] = image.raw;
+        }
+
+        return contactFaces;
     }
 }
 
