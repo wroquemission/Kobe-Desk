@@ -166,15 +166,15 @@ class Database {
         showMessage('Imported covers.');
     }
 
-    importCover(filePath, zoneName) {
+    importCover(filePath, zoneName, freeSize) {
         const cover = ipcRenderer.sendSync(
             'save-image',
             'Covers',
             `${zoneName}.png`,
             filePath,
             false,
-            600,
-            849
+            freeSize ? undefined : 600,
+            freeSize ? undefined : 849
         );
         
         showMessage('Imported cover.');

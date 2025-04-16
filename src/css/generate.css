@@ -129,14 +129,21 @@ img.profile-image {
     height: 7em;
 }
 
-.cover, .cover-wrapper {
+.cover, .cover-wrapper, .nonbreak-cover-wrapper {
     height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.cover-wrapper {
     page-break-after: always;
     page-break-before: always;
+}
+
+.cover-wrapper {
+    page-break-after: always;
 }
 
 @media print {

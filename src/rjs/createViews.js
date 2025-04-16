@@ -25,6 +25,8 @@ class CreateTransferDocsView extends View {
 
         let names = Object.keys(zoneAreas);
         names.splice(0, 0, 'Cover');
+        names.push('Transfer Board');
+        names.push('Calendar');
 
         for (const name of names) {
             const galleryEntry = new Element('DIV', coverGallery, {
@@ -50,12 +52,16 @@ class CreateTransferDocsView extends View {
                     const filePath = dialog.showOpenDialogSync({
                         properties: ['openFile'],
                         filters: [
-                            { name: 'Image', extensions: ['jpg', 'jpeg', 'png' ] }
+                            { name: 'Image', extensions: ['jpg', 'jpeg', 'png'] }
                         ]
                     });
 
                     if (filePath) {
-                        const raw = this.database.importCover(filePath[0], name);
+                        const raw = this.database.importCover(
+                            filePath[0],
+                            name,
+                            name === 'Transfer Board' || name === 'Calendar'
+                        );
 
                         image.element.src = raw;
                     }

@@ -332,6 +332,38 @@ for (const team of Object.values(database.teams)) {
     }
 }
 
+new Element('H1', contentElement, {
+    elementClass: 'section-title',
+    text: 'Transfer Board'
+});
+
+const transferBoardWrapper = new Element('DIV', contentElement, {
+    elementClass: 'nonbreak-cover-wrapper'
+});
+
+new Element('IMG', transferBoardWrapper, {
+    elementClass: 'cover',
+    attributes: {
+        src: covers['Transfer Board']
+    }
+});
+
+new Element('H1', contentElement, {
+    elementClass: 'section-title',
+    text: 'Calendar'
+});
+
+const calendarWrapper = new Element('DIV', contentElement, {
+    elementClass: 'nonbreak-cover-wrapper'
+});
+
+new Element('IMG', calendarWrapper, {
+    elementClass: 'cover',
+    attributes: {
+        src: covers['Calendar']
+    }
+});
+
 new Element('BUTTON', contentElement, {
     elementClass: 'save-button',
     text: 'SAVE',
