@@ -14,7 +14,8 @@ const viewCategories = {
     ],
     'Edit': [
         new EditPeopleView(database),
-        new EditAddressesView(database)
+        new EditAddressesView(database),
+        new EditTeamsView(database)
     ]
 };
 

@@ -6,6 +6,7 @@ class Database {
         this.people = {};
         this.numbers = {};
         this.addresses = {};
+        this.teams = {};
     }
 
     addArea(area) {
@@ -38,6 +39,10 @@ class Database {
 
     addAddress(address) {
         this.addresses[address.name] = address;
+    }
+
+    addTeam(team) {
+        this.teams[team.name] = team;
     }
 
     importTable(table) {
@@ -198,15 +203,16 @@ class Database {
             this.areas,
             this.people,
             this.numbers,
-            this.addresses
+            this.addresses,
+            this.teams
         ]);
     }
 
     loadData() {
         const data = ipcRenderer.sendSync('load-data');
 
-        if (Array.isArray(data) && data.length === 4) {
-            const [areas, people, numbers, addresses] = data;
+        if (Array.isArray(data) && data.length === 5) {
+            const [areas, people, numbers, addresses, teams] = data;
 
             for (const area of Object.values(areas)) {
                 this.addArea(
@@ -252,6 +258,16 @@ class Database {
                         address.englishAddress,
                         address.japaneseAddress,
                         address.areas
+                    )
+                );
+            }
+
+            for (const team of Object.values(teams)) {
+                this.addTeam(
+                    new Team(
+                        team.name,
+                        team.people,
+                        team.roles
                     )
                 );
             }
@@ -391,5 +407,13 @@ class Address {
         this.englishAddress = englishAddress;
         this.japaneseAddress = japaneseAddress;
         this.areas = areas;
+    }
+}
+
+class Team {
+    constructor(name, people, roles) {
+        this.name = name;
+        this.people = people;
+        this.roles = roles;
     }
 }

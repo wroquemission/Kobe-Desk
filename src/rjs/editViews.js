@@ -427,19 +427,19 @@ class EditAddressesDetailsView extends DetailsView {
         let areas = [];
 
         const areasWrapper = new Element('DIV', null, {
-            elementClass: 'edit-add-areas-wrapper'
+            elementClass: 'edit-add-items-wrapper'
         });
 
         const areasList = new Element('DIV', areasWrapper, {
-            elementClass: 'edit-add-areas-list'
+            elementClass: 'edit-add-items-list'
         });
 
         const areasSelectWrapper = new Element('DIV', areasWrapper, {
-            elementClass: 'edit-add-areas-select-wrapper'
+            elementClass: 'edit-add-items-select-wrapper'
         });
 
         const areasSelect = new Element('SELECT', areasSelectWrapper, {
-            elementClass: 'edit-add-areas-select'
+            elementClass: 'edit-add-items-select'
         });
 
         new Element('OPTION', areasSelect, {
@@ -456,16 +456,16 @@ class EditAddressesDetailsView extends DetailsView {
             areas.push(area);
 
             const areaListElement = new Element('DIV', areasList, {
-                elementClass: 'edit-add-areas-list-element'
+                elementClass: 'edit-add-items-list-element'
             });
 
             new Element('DIV', areaListElement, {
-                elementClass: 'edit-add-areas-list-area',
+                elementClass: 'edit-add-items-list-area',
                 text: area
             });
 
             new Element('BUTTON', areaListElement, {
-                elementClass: 'edit-add-areas-list-delete',
+                elementClass: 'edit-add-items-list-delete',
                 text: 'close',
                 eventListener: ['click', () => {
                     areaListElement.element.remove();
@@ -478,7 +478,7 @@ class EditAddressesDetailsView extends DetailsView {
         }
 
         new Element('BUTTON', areasSelectWrapper, {
-            elementClass: 'edit-add-areas-select-button',
+            elementClass: 'edit-add-items-select-button',
             text: 'add',
             eventListener: ['click', () => {
                 const value = areasSelect.element.value;
@@ -490,16 +490,16 @@ class EditAddressesDetailsView extends DetailsView {
                     this.database.saveData();
 
                     const areaListElement = new Element('DIV', null, {
-                        elementClass: 'edit-add-areas-list-element'
+                        elementClass: 'edit-add-items-list-element'
                     });
 
                     new Element('DIV', areaListElement, {
-                        elementClass: 'edit-add-areas-list-area',
+                        elementClass: 'edit-add-items-list-title',
                         text: value
                     });
 
                     new Element('BUTTON', areaListElement, {
-                        elementClass: 'edit-add-areas-list-delete',
+                        elementClass: 'edit-add-items-list-delete',
                         text: 'close',
                         eventListener: ['click', () => {
                             areaListElement.element.remove();
@@ -592,19 +592,19 @@ class EditAddressesAddView extends DetailsView {
         let areas = [];
 
         const areasWrapper = new Element('DIV', null, {
-            elementClass: 'edit-add-areas-wrapper'
+            elementClass: 'edit-add-items-wrapper'
         });
 
         const areasList = new Element('DIV', areasWrapper, {
-            elementClass: 'edit-add-areas-list'
+            elementClass: 'edit-add-items-list'
         });
 
         const areasSelectWrapper = new Element('DIV', areasWrapper, {
-            elementClass: 'edit-add-areas-select-wrapper'
+            elementClass: 'edit-add-items-select-wrapper'
         });
 
         const areasSelect = new Element('SELECT', areasSelectWrapper, {
-            elementClass: 'edit-add-areas-select'
+            elementClass: 'edit-add-items-select'
         });
 
         new Element('OPTION', areasSelect, {
@@ -618,7 +618,7 @@ class EditAddressesAddView extends DetailsView {
         }
 
         new Element('BUTTON', areasSelectWrapper, {
-            elementClass: 'edit-add-areas-select-button',
+            elementClass: 'edit-add-items-select-button',
             text: 'add',
             eventListener: ['click', () => {
                 const value = areasSelect.element.value;
@@ -627,16 +627,16 @@ class EditAddressesAddView extends DetailsView {
                     areas.push(value);
 
                     const areaListElement = new Element('DIV', null, {
-                        elementClass: 'edit-add-areas-list-element'
+                        elementClass: 'edit-add-items-list-element'
                     });
 
                     new Element('DIV', areaListElement, {
-                        elementClass: 'edit-add-areas-list-area',
+                        elementClass: 'edit-add-items-list-area',
                         text: value
                     });
 
                     new Element('BUTTON', areaListElement, {
-                        elementClass: 'edit-add-areas-list-delete',
+                        elementClass: 'edit-add-items-list-delete',
                         text: 'close',
                         eventListener: ['click', () => {
                             areaListElement.element.remove();
@@ -669,6 +669,368 @@ class EditAddressesAddView extends DetailsView {
                     );
 
                     this.database.addAddress(address);
+                    this.database.saveData();
+
+                    this.navigateBack();
+                }
+            }]
+        });
+
+        this.addElement(submitButton);
+    }
+}
+
+class EditTeamsView extends View {
+    get name() { return 'Teams'; }
+
+    getTable() {
+        const table = new Element('DIV', null, {
+            elementClass: 'edit-view-table'
+        });
+
+        for (const team of Object.values(this.database.teams)) {
+            const row = new Element('DIV', table, {
+                elementClass: 'edit-view-team-row',
+                eventListener: ['click', () => {
+                    const view = new EditTeamsDetailsView(
+                        this.database,
+                        this.navigator,
+                        this,
+                        team.name,
+                        { team }
+                    );
+
+                    view.render();
+                }]
+            });
+
+            new Element('DIV', row, {
+                elementClass: 'edit-view-team-title',
+                text: team.name
+            });
+
+            const peopleWrapper = new Element('DIV', row, {
+                elementClass: 'edit-view-team-people-wrapper'
+            });
+
+            for (const personName of team.people) {
+                new Element('DIV', peopleWrapper, {
+                    elementClass: [
+                        'edit-view-team-person',
+                        `edit-view-team-${team.roles[personName]}`
+                    ],
+                    text: personName
+                });
+            }
+        }
+
+        return table;
+    }
+
+    build() {
+        const header = new Element('H1', null, {
+            elementClass: 'view-header',
+            text: 'Teams'
+        });
+
+        this.addElement(header);
+    }
+
+    render() {
+        super.render();
+        
+        const controlsWrapper = new Element('DIV', null, {
+            elementClass: 'edit-details-controls-wrapper'
+        });
+
+        new Element('BUTTON', controlsWrapper, {
+            elementClass: 'edit-details-add-button',
+            text: 'add',
+            eventListener: ['click', () => {
+                const view = new EditTeamsAddView(
+                    this.database,
+                    this.navigator,
+                    this,
+                    'Add Team'
+                );
+
+                view.render();
+            }]
+        });
+
+        this.elements[0].element.after(
+            controlsWrapper.render(),
+            this.getTable().render()
+        );
+    }
+}
+
+class EditTeamsDetailsView extends DetailsView {
+    build() {
+        const team = this.team;
+
+        const header = new Element('H1', null, {
+            elementClass: 'view-header',
+            text: team.name
+        });
+
+        this.addElement(header);
+
+        const sections = [
+            'Leader',
+            'Manager',
+            'Member'
+        ];
+
+        let people = [];
+        let roles = {};
+
+        for (const section of sections) {
+            const sectionHeader = new Element('DIV', null, {
+                elementClass: 'view-section-header',
+                text: section
+            });
+
+            this.addElement(sectionHeader);
+
+            const peopleWrapper = new Element('DIV', null, {
+                elementClass: 'edit-add-items-wrapper'
+            });
+
+            const peopleList = new Element('DIV', peopleWrapper, {
+                elementClass: 'edit-add-items-list'
+            });
+
+            for (const personName of team.people) {
+                if (team.roles[personName] === section) {
+                    const peopleListElement = new Element('DIV', peopleList, {
+                        elementClass: 'edit-add-items-list-element'
+                    });
+
+                    new Element('DIV', peopleListElement, {
+                        elementClass: 'edit-add-items-list-people',
+                        text: personName
+                    });
+
+                    new Element('BUTTON', peopleListElement, {
+                        elementClass: 'edit-add-items-list-delete',
+                        text: 'close',
+                        eventListener: ['click', () => {
+                            peopleListElement.element.remove();
+                            people = people.filter(x => x !== personName);
+                        }]
+                    });
+                }
+            }
+
+            const peopleSelectWrapper = new Element('DIV', peopleWrapper, {
+                elementClass: 'edit-add-items-select-wrapper'
+            });
+
+            const peopleSelect = new Element('SELECT', peopleSelectWrapper, {
+                elementClass: 'edit-add-items-select'
+            });
+
+            new Element('OPTION', peopleSelect, {
+                text: ''
+            });
+
+            for (const personName in this.database.people) {
+                new Element('OPTION', peopleSelect, {
+                    text: personName
+                });
+            }
+
+            new Element('BUTTON', peopleSelectWrapper, {
+                elementClass: 'edit-add-items-select-button',
+                text: 'add',
+                eventListener: ['click', () => {
+                    const value = peopleSelect.element.value;
+
+                    if (value && people.indexOf(value) === -1) {
+                        people.push(value);
+                        roles[value] = section;
+
+                        const peopleListElement = new Element('DIV', null, {
+                            elementClass: 'edit-add-items-list-element'
+                        });
+
+                        new Element('DIV', peopleListElement, {
+                            elementClass: 'edit-add-items-list-people',
+                            text: value
+                        });
+
+                        new Element('BUTTON', peopleListElement, {
+                            elementClass: 'edit-add-items-list-delete',
+                            text: 'close',
+                            eventListener: ['click', () => {
+                                peopleListElement.element.remove();
+                                people = people.filter(x => x !== value);
+                            }]
+                        });
+
+                        peopleList.element.appendChild(
+                            peopleListElement.render()
+                        );
+
+                        peopleSelect.element.value = '';
+                    }
+                }]
+            });
+
+            this.addElement(peopleWrapper);
+        }
+
+        const deleteButton = new Element('BUTTON', null, {
+            elementClass: 'edit-view-delete-button',
+            text: 'DELETE',
+            eventListener: ['click', () => {
+                delete this.database.teams[this.team.name];
+                this.database.saveData();
+
+                this.navigateBack();
+            }]
+        });
+
+        this.addElement(deleteButton);
+    }
+}
+
+class EditTeamsAddView extends DetailsView {
+    build() {
+        const header = new Element('H1', null, {
+            elementClass: 'view-header',
+            text: 'Add Team'
+        });
+
+        this.addElement(header);
+
+        const table = new Element('TABLE', null, {
+            elementClass: 'edit-details-table'
+        });
+
+        let teamName = '';
+
+        const row = new Element('TR', table, {
+            elementClass: 'edit-details-table-row'
+        });
+
+        new Element('TD', row, {
+            elementClass: 'edit-details-table-header',
+            text: 'Name'
+        });
+
+        const valueColumn = new Element('TD', row, {
+            elementClass: 'edit-details-table-value-column',
+        });
+
+        const nameInput = new Element('INPUT', valueColumn, {
+            elementClass: 'edit-details-table-value-input',
+            attributes: {
+                type: 'text'
+            },
+            eventListener: ['change', () => {
+                teamName = nameInput.element.value;
+            }]
+        });
+
+        this.addElement(table);
+
+        const sections = [
+            'Leader',
+            'Manager',
+            'Member'
+        ];
+
+        let people = [];
+        let roles = {};
+
+        for (const section of sections) {
+            const sectionHeader = new Element('DIV', null, {
+                elementClass: 'view-section-header',
+                text: section
+            });
+
+            this.addElement(sectionHeader);
+
+            const peopleWrapper = new Element('DIV', null, {
+                elementClass: 'edit-add-items-wrapper'
+            });
+
+            const peopleList = new Element('DIV', peopleWrapper, {
+                elementClass: 'edit-add-items-list'
+            });
+
+            const peopleSelectWrapper = new Element('DIV', peopleWrapper, {
+                elementClass: 'edit-add-items-select-wrapper'
+            });
+
+            const peopleSelect = new Element('SELECT', peopleSelectWrapper, {
+                elementClass: 'edit-add-items-select'
+            });
+
+            new Element('OPTION', peopleSelect, {
+                text: ''
+            });
+
+            for (const personName in this.database.people) {
+                new Element('OPTION', peopleSelect, {
+                    text: personName
+                });
+            }
+
+            new Element('BUTTON', peopleSelectWrapper, {
+                elementClass: 'edit-add-items-select-button',
+                text: 'add',
+                eventListener: ['click', () => {
+                    const value = peopleSelect.element.value;
+
+                    if (value && people.indexOf(value) === -1) {
+                        people.push(value);
+                        roles[value] = section;
+
+                        const peopleListElement = new Element('DIV', null, {
+                            elementClass: 'edit-add-items-list-element'
+                        });
+
+                        new Element('DIV', peopleListElement, {
+                            elementClass: 'edit-add-items-list-people',
+                            text: value
+                        });
+
+                        new Element('BUTTON', peopleListElement, {
+                            elementClass: 'edit-add-items-list-delete',
+                            text: 'close',
+                            eventListener: ['click', () => {
+                                peopleListElement.element.remove();
+                                people = people.filter(x => x !== value);
+                            }]
+                        });
+
+                        peopleList.element.appendChild(
+                            peopleListElement.render()
+                        );
+
+                        peopleSelect.element.value = '';
+                    }
+                }]
+            });
+
+            this.addElement(peopleWrapper);
+        }
+
+        const submitButton = new Element('BUTTON', null, {
+            elementClass: 'edit-add-submit-button',
+            text: 'Add',
+            eventListener: ['click', () => {
+                if (teamName && people.length) {
+                    const team = new Team(
+                        teamName,
+                        people,
+                        roles
+                    );
+
+                    this.database.addTeam(team);
                     this.database.saveData();
 
                     this.navigateBack();

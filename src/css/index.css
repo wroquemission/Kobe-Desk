@@ -483,17 +483,16 @@ button.edit-add-submit-button {
     outline: none;
 }
 
-.edit-add-areas-list {
+.edit-add-items-list {
     width: 100%;
     font-family: 'Roboto';
     font-size: 11pt;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    /* margin: 13px; */
 }
 
-.edit-add-areas-list-element {
+.edit-add-items-list-element {
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
@@ -505,12 +504,12 @@ button.edit-add-submit-button {
     border: solid 2px #eee;
 }
 
-.edit-add-areas-wrapper {
+.edit-add-items-wrapper {
     width: 350px;
     margin: 10px;
 }
 
-button.edit-add-areas-list-delete {
+button.edit-add-items-list-delete {
     font-family: 'Material Icons';
     background: #d8d8d8;
     color: white;
@@ -520,13 +519,13 @@ button.edit-add-areas-list-delete {
     cursor: pointer;
 }
 
-.edit-add-areas-list-area {
+.edit-add-items-list-title {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.edit-add-areas-select-wrapper {
+.edit-add-items-select-wrapper {
     width: 100%;
     height: 40px;
     display: flex;
@@ -535,7 +534,7 @@ button.edit-add-areas-list-delete {
     box-sizing: border-box;
 }
 
-select.edit-add-areas-select {
+select.edit-add-items-select {
     height: 100%;
     width: 100%;
     margin-right: 10px;
@@ -543,7 +542,7 @@ select.edit-add-areas-select {
     padding: 10px;
 }
 
-button.edit-add-areas-select-button {
+button.edit-add-items-select-button {
     height: 40px;
     width: 40px;
     font-family: 'Material Icons';
@@ -556,7 +555,7 @@ button.edit-add-areas-select-button {
 }
 
 button.edit-view-delete-button {
-    height: 40px;
+    min-height: 40px;
     width: 350px;
     font-family: 'Roboto';
     font-size: 10pt;
@@ -579,4 +578,57 @@ div#status-message {
     padding: 13px 21px;
     cursor: default;
     border: solid 2px #adadad;
+}
+
+.view-section-header {
+    font-size: 13pt;
+    font-family: 'Roboto';
+    color: #a7a7a7;
+    font-weight: 100;
+    margin-bottom: 0;
+    margin-top: 17px;
+    user-select: none;
+}
+
+.edit-view-team-row {
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    justify-content: center;
+    font-family: 'Roboto';
+    font-size: 11pt;
+    border: solid 4px #c3c3c3;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 4px 20px;
+    cursor: pointer;
+    color: #333;
+}
+
+.edit-view-team-title {
+    width: 100%;
+    text-align: center;
+    padding: 17px;
+    box-sizing: border-box;
+    color: #777;
+}
+
+.edit-view-team-people-wrapper {
+    width: 100%;
+}
+
+.edit-view-team-person {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px;
+}
+
+.edit-view-team-person.edit-view-team-Leader {
+    color: white;
+    background: #444;
+}
+
+.edit-view-team-person.edit-view-team-Manager {
+    color: #ff8383;
 }
