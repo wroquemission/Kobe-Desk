@@ -2,19 +2,83 @@ class EditPeopleView extends PaginatedView {
     get name() { return 'People'; }
 
     getCount() {
+        if (this.count) {
+            return this.count;
+        }
+
         return Object.keys(this.database.people).length;
     }
 
-    getEntries(start, end) {
+    render() {
+        super.render();
+        
+        const controlsWrapper = new Element('DIV', null, {
+            elementClass: 'edit-details-controls-wrapper'
+        });
+
+        const searchInput = new Element('INPUT', controlsWrapper, {
+            elementClass: 'edit-details-search-input',
+            attributes: {
+                placeholder: 'Search...',
+                spellcheck: 'false'
+            },
+            eventListener: ['keyup', () => {
+                this.refreshTable(searchInput.element.value);
+            }]
+        });
+
+        this.elements[0].element.after(
+            controlsWrapper.render()
+        );
+    }
+
+    getEntries(start, end, query) {
         const profiles = this.database.getProfiles();
+        
+        const controlsWrapper = new Element('DIV', null, {
+            elementClass: 'edit-details-controls-wrapper'
+        });
+
+        const searchInput = new Element('INPUT', controlsWrapper, {
+            elementClass: 'edit-details-search-input',
+            attributes: {
+                placeholder: 'Search...'
+            },
+            eventListener: ['keyup', () => {
+                this.refreshTable(searchInput.element.value);
+            }]
+        });
 
         const table = new Element('DIV', null, {
             elementClass: 'edit-view-table'
         });
 
-        const people = Object.values(this.database.people);
+        query = query ? query.toLowerCase() : '';
 
-        for (let i = start; i < end; i++) {
+        const people = Object.values(this.database.people).filter(person => {
+            const area = this.database.getPersonArea(person.name);
+
+            if (area) {
+                return person.name.toLowerCase().includes(query)
+                    || person.ID.toLowerCase().includes(query)
+                    || person.type.toLowerCase().includes(query)
+                    || person.assignment.toLowerCase().includes(query)
+                    || person.status.toLowerCase().includes(query)
+                    || area.name.toLowerCase().includes(query)
+                    || area.district.toLowerCase().includes(query)
+                    || area.zone.toLowerCase().includes(query);
+            }
+
+            return person.name.toLowerCase().includes(query)
+                || person.ID.toLowerCase().includes(query)
+                || person.type.toLowerCase().includes(query)
+                || person.assignment.toLowerCase().includes(query)
+                || person.status.toLowerCase().includes(query);
+        });
+
+        this.count = people.length;
+
+        for (let i = start; i < Math.min(end, people.length); i++) {
             const person = people[i];
 
             const isInField = person.status === 'In-Field';
@@ -188,17 +252,30 @@ class EditAddressesView extends PaginatedView {
     get name() { return 'Addresses'; }
 
     getCount() {
+        if (this.count) {
+            return this.count;
+        }
+
         return Object.keys(this.database.addresses).length;
     }
 
-    getEntries(start, end) {
+    getEntries(start, end, query) {
         const table = new Element('DIV', null, {
             elementClass: 'edit-view-table'
         });
 
-        const addresses = Object.values(this.database.addresses);
+        query = query ? query.toLowerCase() : '';
 
-        for (let i = start; i < end; i++) {
+        const addresses = Object.values(this.database.addresses).filter(address => {
+            return address.name.toLowerCase().includes(query)
+                || address.postalCode.includes(query)
+                || address.englishAddress.includes(query)
+                || address.japaneseAddress.includes(query);
+        });
+
+        this.count = addresses.length;
+
+        for (let i = start; i < Math.min(end, addresses.length); i++) {
             const address = addresses[i];
 
             const row = new Element('DIV', table, {
@@ -261,11 +338,15 @@ class EditAddressesView extends PaginatedView {
             elementClass: 'edit-details-controls-wrapper'
         });
 
-        new Element('INPUT', controlsWrapper, {
+        const searchInput = new Element('INPUT', controlsWrapper, {
             elementClass: 'edit-details-search-input',
             attributes: {
-                placeholder: 'Search...'
-            }
+                placeholder: 'Search...',
+                spellcheck: 'false'
+            },
+            eventListener: ['keyup', () => {
+                this.refreshTable(searchInput.element.value);
+            }]
         });
 
         new Element('BUTTON', controlsWrapper, {

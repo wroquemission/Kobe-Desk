@@ -79,13 +79,55 @@ class PaginatedView extends View {
     constructor(database) {
         super(database, {
             page: 0,
-            entriesPerPage: 25
+            entriesPerPage: 25,
+            query: '',
+            count: undefined
         });
+
+        this.table = undefined;
+        this.leftButton = undefined;
+        this.rightButton = undefined;
     }
 
     getCount() {}
 
     getEntries() {}
+
+    refreshTable(query) {
+        if (query && query !== this.query) {
+            this.page = 0;
+        }
+
+        if (query !== undefined) {
+            this.query = query;
+        }
+
+        if (this.table) {
+            this.table.replace(
+                this.getEntries(
+                    this.page * this.entriesPerPage,
+                    Math.min(this.getCount(), (this.page + 1) * this.entriesPerPage),
+                    this.query
+                )
+            );
+        }
+
+        if (this.leftButton) {
+            if (this.page === 0) {
+                this.leftButton.element.classList.add('edit-view-pagination-inactive');
+            } else {
+                this.leftButton.element.classList.remove('edit-view-pagination-inactive');
+            }
+        }
+
+        if (this.rightButton) {
+            if ((this.page + 1) * this.entriesPerPage < this.getCount()) {
+                this.rightButton.element.classList.remove('edit-view-pagination-inactive');
+            } else {
+                this.rightButton.element.classList.add('edit-view-pagination-inactive');
+            }
+        }
+    }
 
     render() {
         this.elements = [];
@@ -97,12 +139,12 @@ class PaginatedView extends View {
 
         this.addElement(header);
 
-        const table = this.getEntries(
+        this.table = this.getEntries(
             this.page * this.entriesPerPage,
             Math.min(this.getCount(), (this.page + 1) * this.entriesPerPage)
         );
 
-        this.addElement(table);
+        this.addElement(this.table);
 
         const pagination = new Element('DIV', null, {
             elementClass: 'edit-view-pagination'
@@ -110,7 +152,7 @@ class PaginatedView extends View {
 
         const count = this.getCount();
 
-        const leftButton = new Element('BUTTON', pagination, {
+        this.leftButton = new Element('BUTTON', pagination, {
             elementClass: [
                 'edit-view-pagination-left',
                 this.page === 0 ? 'edit-view-pagination-inactive' : ''
@@ -119,22 +161,17 @@ class PaginatedView extends View {
             eventListener: ['click', () => {
                 if (this.page > 0) {
                     this.page--;
-                    table.replace(
-                        this.getEntries(
-                            this.page * this.entriesPerPage,
-                            Math.min(this.getCount(), (this.page + 1) * this.entriesPerPage)
-                        )
-                    );
+                    this.refreshTable();
 
                     this.resetScroll();
                 }
 
                 if (this.page === 0) {
-                    leftButton.element.classList.add('edit-view-pagination-inactive');
+                    this.leftButton.element.classList.add('edit-view-pagination-inactive');
                 }
 
                 if ((this.page + 1) * this.entriesPerPage < count) {
-                    rightButton.element.classList.remove('edit-view-pagination-inactive');
+                    this.rightButton.element.classList.remove('edit-view-pagination-inactive');
                 }
             }],
             attributes: {
@@ -142,7 +179,7 @@ class PaginatedView extends View {
             }
         });
 
-        const rightButton = new Element('BUTTON', pagination, {
+        this.rightButton = new Element('BUTTON', pagination, {
             elementClass: [
                 'edit-view-pagination-right',
                 (this.page + 1) * this.entriesPerPage >= count ? 'edit-view-pagination-inactive' : ''
@@ -151,22 +188,17 @@ class PaginatedView extends View {
             eventListener: ['click', () => {
                 if ((this.page + 1) * this.entriesPerPage < count) {
                     this.page++;
-                    table.replace(
-                        this.getEntries(
-                            this.page * this.entriesPerPage,
-                            Math.min(this.getCount(), (this.page + 1) * this.entriesPerPage)
-                        )
-                    );
+                    this.refreshTable();
 
                     this.resetScroll();
                 }
 
                 if (this.page > 0) {
-                    leftButton.element.classList.remove('edit-view-pagination-inactive');
+                    this.leftButton.element.classList.remove('edit-view-pagination-inactive');
                 }
 
                 if ((this.page + 1) * this.entriesPerPage >= count) {
-                    rightButton.element.classList.add('edit-view-pagination-inactive');
+                    this.rightButton.element.classList.add('edit-view-pagination-inactive');
                 }
             }],
             attributes: {
