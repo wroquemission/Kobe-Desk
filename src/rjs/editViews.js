@@ -37,28 +37,6 @@ class EditPeopleView extends PaginatedView {
                 }]
             });
 
-            const profileWrapper = new Element('DIV', row, {
-                elementClass: 'edit-view-profile-wrapper'
-            });
-
-            if (person.ID in profiles) {
-                const imageWrapper = new Element('DIV', profileWrapper, {
-                    elementClass: 'edit-view-profile-image-wrapper'
-                });
-
-                new Element('IMG', imageWrapper, {
-                    elementClass: 'edit-view-profile',
-                    attributes: {
-                        src: profiles[person.ID]
-                    }
-                });
-            }
-
-            new Element('DIV', profileWrapper, {
-                elementClass: 'edit-view-person-ID',
-                text: person.ID
-            });
-
             new Element('DIV', row, {
                 elementClass: 'edit-view-person-name',
                 text: person.type + ' ' + person.name.split(',')[0]
@@ -86,6 +64,28 @@ class EditPeopleView extends PaginatedView {
             new Element('DIV', row, {
                 elementClass: 'edit-view-person-zone',
                 text: area.zone
+            });
+
+            const profileWrapper = new Element('DIV', row, {
+                elementClass: 'edit-view-profile-wrapper'
+            });
+
+            if (person.ID in profiles) {
+                const imageWrapper = new Element('DIV', profileWrapper, {
+                    elementClass: 'edit-view-profile-image-wrapper'
+                });
+
+                new Element('IMG', imageWrapper, {
+                    elementClass: 'edit-view-profile',
+                    attributes: {
+                        src: profiles[person.ID]
+                    }
+                });
+            }
+
+            new Element('DIV', profileWrapper, {
+                elementClass: 'edit-view-person-ID',
+                text: person.ID
             });
         }
         
@@ -127,19 +127,9 @@ class EditPeopleDetailsView extends DetailsView {
                 });
 
                 if (filePath) {
-                    const extension = path.extname(filePath[0]).slice(1);
-
-                    let raw = fs.readFileSync(filePath[0]).toString('base64');
-
-                    if (extension === 'png') {
-                        raw = 'data:image/png;base64,' + raw;
-                    } else if (extension === 'jpg' || extension === 'jpeg') {
-                        raw = 'data:image/jpeg;base64,' + raw;
-                    }
+                    const raw = this.database.importProfile(filePath[0], person.ID);
 
                     image.element.src = raw;
-
-                    this.database.importProfile(filePath[0], person.ID);
                 }
             }]
         });

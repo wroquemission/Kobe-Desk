@@ -300,7 +300,7 @@ button.edit-view-pagination-left, button.edit-view-pagination-right {
     cursor: pointer;
 }
 
-button.edit-view-pagination-left.edit-view-pagination-inactive {
+button.edit-view-pagination-inactive {
     background: #c0c0c0;
     cursor: default;
 }
@@ -565,4 +565,17 @@ button.edit-view-delete-button {
     cursor: pointer;
     margin-top: 10px;
     outline: none;
+}
+
+div#status-message {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: #ffffff;
+    color: #646464;
+    font-family: 'Roboto';
+    font-size: 11pt;
+    padding: 13px 21px;
+    cursor: default;
+    border: solid 2px #adadad;
 }

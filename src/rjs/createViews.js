@@ -55,19 +55,9 @@ class CreateTransferDocsView extends View {
                     });
 
                     if (filePath) {
-                        const extension = path.extname(filePath[0]).slice(1);
-
-                        let raw = fs.readFileSync(filePath[0]).toString('base64');
-
-                        if (extension === 'png') {
-                            raw = 'data:image/png;base64,' + raw;
-                        } else if (extension === 'jpg' || extension === 'jpeg') {
-                            raw = 'data:image/jpeg;base64,' + raw;
-                        }
+                        const raw = this.database.importCover(filePath[0], name);
 
                         image.element.src = raw;
-
-                        this.database.importCover(filePath[0], name);
                     }
                 }]
             });

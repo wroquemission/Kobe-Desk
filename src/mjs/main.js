@@ -8,8 +8,6 @@ const {
 
 require('@electron/remote/main').initialize();
 
-const isMac = process.platform === 'darwin';
-
 const path = require('path');
 
 const windowStateKeeper = require('electron-window-state');
@@ -50,6 +48,10 @@ const mainWinObject = {
     movable: true
 };
 
+function isDev() {
+  return process.argv[2] === '--dev';
+}
+
 function createWindow(windowName, windowObject) {
     let window = new BrowserWindow(windowObject);
 
@@ -61,7 +63,9 @@ function createWindow(windowName, windowObject) {
 
     require("@electron/remote/main").enable(window.webContents);
 
-    window.webContents.openDevTools({ mode: 'detach' });
+    if (isDev()) {
+        window.webContents.openDevTools({ mode: 'detach' });
+    }
 
     window.webContents.once('did-finish-load', () => {
         window.show();
@@ -146,16 +150,27 @@ ipcMain.on('save-image', (event, directory, fileName, sourcePath, isBase64, widt
     }
 
     sharp(data)
+        .rotate()
         .resize(width, height)
         .png({ force: false, compressionLevel: 9 })
         .toBuffer()
         .then(output => {
+            const extension = path.extname(fileName).slice(1);
+
             fileio.write(
                 filePath,
                 output
             );
 
-            event.returnValue = '';
+            let raw = output.toString('base64');
+
+            if (extension === 'png') {
+                raw = 'data:image/png;base64,' + raw;
+            } else if (extension === 'jpg' || extension === 'jpeg') {
+                raw = 'data:image/jpeg;base64,' + raw;
+            }
+
+            event.returnValue = raw;
         }).catch(() => {
             console.log('Could not read', sourcePath);
 
@@ -230,26 +245,6 @@ ipcMain.on('append-warning', (event, warning) => {
 });
 
 const template = [
-    ...(isMac ? [{
-        label: app.name,
-        submenu: [
-            { role: 'about' },
-            { type: 'separator' },
-            {
-                label: 'Preferences',
-                click: openPreferences,
-                accelerator: 'CmdOrCtrl+,'
-            },
-            { type: 'separator' },
-            { role: 'services' },
-            { type: 'separator' },
-            { role: 'hide' },
-            { role: 'hideOthers' },
-            { role: 'unhide' },
-            { type: 'separator' },
-            { role: 'quit' }
-        ]
-    }] : []),
     {
         label: 'Edit',
         submenu: [
@@ -259,22 +254,9 @@ const template = [
             { role: 'cut' },
             { role: 'copy' },
             { role: 'paste' },
-            ...(isMac ? [
-                { role: 'delete' },
-                { role: 'selectAll' },
-                { type: 'separator' },
-                {
-                    label: 'Speech',
-                    submenu: [
-                        { role: 'startSpeaking' },
-                        { role: 'stopSpeaking' }
-                    ]
-                }
-            ] : [
-                { role: 'delete' },
-                { type: 'separator' },
-                { role: 'selectAll' }
-            ])
+            { role: 'delete' },
+            { type: 'separator' },
+            { role: 'selectAll' }
         ]
     },
     {
@@ -294,15 +276,7 @@ const template = [
         submenu: [
             { role: 'minimize' },
             { role: 'zoom' },
-            ...(isMac ? [
-                { type: 'separator' },
-                { role: 'front' },
-                { type: 'separator' },
-                { role: 'window' },
-                { role: 'close' }
-            ] : [
-                { role: 'close' }
-            ])
+            { role: 'close' }
         ]
     }
 ]

@@ -82,6 +82,8 @@ class Database {
         }
 
         this.saveData();
+        
+        showMessage('Imported table.');
     }
 
     importAddresses(table) {
@@ -100,6 +102,8 @@ class Database {
         }
 
         this.saveData();
+        
+        showMessage('Imported addresses.');
     }
 
     importAddressKey(table) {
@@ -117,6 +121,8 @@ class Database {
         }
 
         this.saveData();
+        
+        showMessage('Imported address key.');
     }
 
     importProfiles(data) {
@@ -133,6 +139,8 @@ class Database {
                 337
             );
         }
+        
+        showMessage('Imported profiles.');
     }
 
     importCovers(data) {
@@ -149,10 +157,12 @@ class Database {
                 849
             );
         }
+        
+        showMessage('Imported covers.');
     }
 
     importCover(filePath, zoneName) {
-        ipcRenderer.sendSync(
+        const cover = ipcRenderer.sendSync(
             'save-image',
             'Covers',
             `${zoneName}.png`,
@@ -161,10 +171,14 @@ class Database {
             600,
             849
         );
+        
+        showMessage('Imported cover.');
+
+        return cover;
     }
 
     importProfile(filePath, ID) {
-        ipcRenderer.sendSync(
+        const profile = ipcRenderer.sendSync(
             'save-image',
             'Profiles',
             `${ID}.jpg`,
@@ -173,6 +187,10 @@ class Database {
             281,
             337
         );
+        
+        showMessage('Imported profile.');
+
+        return profile;
     }
 
     saveData() {
