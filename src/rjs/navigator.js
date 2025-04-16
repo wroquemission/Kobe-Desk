@@ -132,6 +132,12 @@ class ViewNavigator {
             eventListener: ['click', () => {
                 this.renderTitlebar();
                 parentView.render();
+
+                const searchInput = document.querySelector('.edit-details-search-input');
+
+                if (searchInput && parentView.query !== undefined) {
+                    searchInput.value = parentView.query;
+                }
             }]
         });
 

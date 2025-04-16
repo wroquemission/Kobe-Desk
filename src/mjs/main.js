@@ -195,7 +195,6 @@ ipcMain.on('save-pdf', event => {
             right: 0,
             bottom: 0
         },
-        preferCSSPageSize: true,
         generateDocumentOutline: true
     }).then(data => {
         fs.writeFileSync(savePath, data);

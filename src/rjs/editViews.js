@@ -32,7 +32,7 @@ class EditPeopleView extends PaginatedView {
         );
     }
 
-    getEntries(start, end, query) {
+    getEntries(query) {
         const profiles = this.database.getProfiles();
         
         const controlsWrapper = new Element('DIV', null, {
@@ -78,7 +78,10 @@ class EditPeopleView extends PaginatedView {
 
         this.count = people.length;
 
-        for (let i = start; i < Math.min(end, people.length); i++) {
+        const start = this.page * this.entriesPerPage;
+        const end = Math.min(people.length, (this.page + 1) * this.entriesPerPage);
+
+        for (let i = start; i < end; i++) {
             const person = people[i];
 
             const isInField = person.status === 'In-Field';
@@ -259,7 +262,7 @@ class EditAddressesView extends PaginatedView {
         return Object.keys(this.database.addresses).length;
     }
 
-    getEntries(start, end, query) {
+    getEntries(query) {
         const table = new Element('DIV', null, {
             elementClass: 'edit-view-table'
         });
@@ -275,7 +278,10 @@ class EditAddressesView extends PaginatedView {
 
         this.count = addresses.length;
 
-        for (let i = start; i < Math.min(end, addresses.length); i++) {
+        const start = this.page * this.entriesPerPage;
+        const end = Math.min(addresses.length, (this.page + 1) * this.entriesPerPage);
+
+        for (let i = start; i < end; i++) {
             const address = addresses[i];
 
             const row = new Element('DIV', table, {
@@ -446,7 +452,9 @@ class EditAddressesDetailsView extends DetailsView {
             text: ''
         });
 
-        for (const areaName in this.database.areas) {
+        const areaNames = Object.keys(this.database.areas).sort();
+
+        for (const areaName of areaNames) {
             new Element('OPTION', areasSelect, {
                 text: areaName
             });
@@ -611,7 +619,9 @@ class EditAddressesAddView extends DetailsView {
             text: ''
         });
 
-        for (const areaName in this.database.areas) {
+        const areaNames = Object.keys(this.database.areas).sort();
+
+        for (const areaName of areaNames) {
             new Element('OPTION', areasSelect, {
                 text: areaName
             });
@@ -835,7 +845,9 @@ class EditTeamsDetailsView extends DetailsView {
                 text: ''
             });
 
-            for (const personName in this.database.people) {
+            const peopleNames = Object.keys(this.database.people).sort();
+
+            for (const personName of peopleNames) {
                 new Element('OPTION', peopleSelect, {
                     text: personName
                 });
@@ -973,7 +985,9 @@ class EditTeamsAddView extends DetailsView {
                 text: ''
             });
 
-            for (const personName in this.database.people) {
+            const peopleNames = Object.keys(this.database.people).sort();
+
+            for (const personName of peopleNames) {
                 new Element('OPTION', peopleSelect, {
                     text: personName
                 });

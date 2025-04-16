@@ -239,7 +239,7 @@ for (const zone in zoneDistricts) {
 
                 new Element('TD', nameRow, {
                     elementClass: 'name-column',
-                    text: person.name
+                    text: person.type + ' ' + person.name
                 });
 
                 new Element('TD', roleRow, {
@@ -298,6 +298,37 @@ for (const zone in zoneDistricts) {
                 elementClass: 'table-filler'
             });
         }
+    }
+}
+
+new Element('H1', contentElement, {
+    elementClass: 'section-title',
+    text: 'Teams'
+});
+
+const teamsSection = new Element('DIV', contentElement, {
+    elementClass: 'section',
+    ID: 'teams'
+});
+
+for (const team of Object.values(database.teams)) {
+    new Element('TR', teamsSection, {
+        elementClass: 'team-list-header',
+        text: team.name
+    });
+
+    const list = new Element('UL', teamsSection, {
+        elementClass: 'team-list'
+    });
+
+    for (const personName of team.people) {
+        new Element('LI', list, {
+            elementClass: [
+                'team-list-element',
+                `team-list-element-${team.roles[personName]}`
+            ],
+            text: database.people[personName].type + ' ' + personName
+        });
     }
 }
 

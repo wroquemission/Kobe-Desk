@@ -326,3 +326,35 @@ button.save-button {
     padding: 0 25px;
     outline: none;
 }
+
+tr.team-list-header {
+    width: 100%;
+    font-family: Roboto;
+    color: #767676;
+    font-weight: 500;
+    font-size: 13pt;
+}
+
+ul.team-list {
+    list-style-type: none;
+    font-family: 'Roboto';
+    color: #372626;
+}
+
+li.team-list-element:before {
+    content: '–';
+    margin-right: 0.6em;
+    margin-left: -1em;
+}
+
+li.team-list-element {
+    margin-bottom: 6px;
+}
+
+li.team-list-element.team-list-element-Leader {
+    color: #ff7171;
+}
+
+li.team-list-element.team-list-element-Manager {
+    color: #ffa9a9;
+}

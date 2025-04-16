@@ -104,11 +104,7 @@ class PaginatedView extends View {
 
         if (this.table) {
             this.table.replace(
-                this.getEntries(
-                    this.page * this.entriesPerPage,
-                    Math.min(this.getCount(), (this.page + 1) * this.entriesPerPage),
-                    this.query
-                )
+                this.getEntries(this.query)
             );
         }
 
@@ -139,10 +135,7 @@ class PaginatedView extends View {
 
         this.addElement(header);
 
-        this.table = this.getEntries(
-            this.page * this.entriesPerPage,
-            Math.min(this.getCount(), (this.page + 1) * this.entriesPerPage)
-        );
+        this.table = this.getEntries(this.query);
 
         this.addElement(this.table);
 
