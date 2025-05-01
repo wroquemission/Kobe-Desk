@@ -114,14 +114,14 @@ function encodeQuotedPrintable(input) {
     return output;
 }
 
-function generateCard(name, reading, number1, number2, missionaries, photo, note, zone) {
+function generateCard(name, reading, number, missionaries, photo, note, zone) {
     const template = `
 BEGIN:VCARD
 VERSION:2.1
 FN:${name}
 SOUND;X-IRMC-N;CHARSET=UTF-8:${reading};;;;
-TEL;CELL:${number1}
-TEL;CELL:${number2}
+TEL;CELL:${number}
+TEL;CELL:
 TEL;CELL:
 TEL;CELL:
 EMAIL;HOME:
@@ -242,38 +242,40 @@ class CreateContactsView extends View {
 
                     const contactFaces = this.database.getContactFaces();
 
-                    Object.values(this.database.areas).forEach(area => {
-                        let noteParts = [
-                            `${area.district} District`,
-                            `${area.zone} Zone`
-                        ];
+                    Object.values(this.database.numbers).forEach(number => {
+                        let area;
+                        if (number.name in this.database.areas) {
+                            area = this.database.areas[number.name];
+                        }
+
+                        let noteParts = [];
+
+                        if (area) {
+                            noteParts = [
+                                `${area.district} District`,
+                                `${area.zone} Zone`
+                            ];
+                        }
 
                         const encodedNote = encodeQuotedPrintable(noteParts.join(', '));
-                        const numbers = this.database.getAllAreaNumbers(area.name);
 
-                        if (!numbers.length) return;
-
-                        const phoneA = numbers[0].number;
-                        const phoneB = numbers.length > 1 ? numbers[1].number : '';
-
-                        const missionaries = area.people.map(name => {
+                        const missionaries = area ? area.people.map(name => {
                             const person = this.database.people[name];
                             return person.type + ' ' + name.split(',')[0];
-                        }).join(', ');
+                        }).join(', ') : '';
 
-                        const group = numbers[0].group;
+                        const group = number.group;
 
                         const photo = group in contactFaces ? contactFaces[group] : '';
 
                         const card = generateCard(
-                            area.name,
+                            number.name,
                             groupYomi[group],
-                            phoneA,
-                            phoneB,
+                            number.number,
                             missionaries,
                             photo.replace('data:image/png;base64,', '').replace(/^"|"$/g, ''),
                             encodedNote,
-                            area.zone
+                            area ? area.zone : ''
                         );
 
                         vcfOutput.push(card.replace(/^\s{4}/gm, '').trim());
