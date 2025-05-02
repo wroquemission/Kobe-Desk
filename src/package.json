@@ -1,0 +1,35 @@
+{
+    "name": "kobedesk",
+    "productName": "Kobe Desk",
+    "version": "1.0.0",
+    "description": "A platform for automating work in the mission office.",
+    "build": {
+        "appId": "com.jkm.kobedesk",
+        "win": {
+            "icon": "assets/icon.png"
+        }
+    },
+    "scripts": {
+        "start": "electron .",
+        "dist": "electron-builder -m",
+        "dist-win": "electron-builder -w"
+    },
+    "main": "mjs/main.js",
+    "author": "William Roque",
+    "email": "William Roque <william.roque@missionary.org>",
+    "license": "ISC",
+    "devDependencies": {
+        "electron": "^17.0.1",
+        "electron-builder": "^22.14.13"
+    },
+    "dependencies": {
+        "@electron/remote": "github:electron/remote",
+        "electron-is-dev": "^1.2.0",
+        "electron-window-state": "^5.0.3",
+        "fix-path": "^2.1.0",
+        "pdftopic": "^1.0.7-alpha",
+        "sharp": "^0.34.1",
+        "start": "^5.1.0",
+        "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+    }
+}
